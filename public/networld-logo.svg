@@ -1,0 +1,30 @@
+<svg width="200" height="80" viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Globe with network -->
+  <circle cx="40" cy="40" r="25" stroke="#8B1538" stroke-width="2" fill="none"/>
+  <circle cx="40" cy="40" r="20" stroke="#2563EB" stroke-width="1.5" fill="none"/>
+  
+  <!-- Network nodes -->
+  <circle cx="40" cy="20" r="2" fill="#8B1538"/>
+  <circle cx="55" cy="30" r="2" fill="#2563EB"/>
+  <circle cx="55" cy="50" r="2" fill="#8B1538"/>
+  <circle cx="40" cy="60" r="2" fill="#2563EB"/>
+  <circle cx="25" cy="50" r="2" fill="#8B1538"/>
+  <circle cx="25" cy="30" r="2" fill="#2563EB"/>
+  
+  <!-- Connecting lines -->
+  <line x1="40" y1="20" x2="55" y2="30" stroke="#8B1538" stroke-width="1"/>
+  <line x1="55" y1="30" x2="55" y2="50" stroke="#2563EB" stroke-width="1"/>
+  <line x1="55" y1="50" x2="40" y2="60" stroke="#8B1538" stroke-width="1"/>
+  <line x1="40" y1="60" x2="25" y2="50" stroke="#2563EB" stroke-width="1"/>
+  <line x1="25" y1="50" x2="25" y2="30" stroke="#8B1538" stroke-width="1"/>
+  <line x1="25" y1="30" x2="40" y2="20" stroke="#2563EB" stroke-width="1"/>
+  
+  <!-- Arrow -->
+  <path d="M 50 25 L 65 15 L 63 25 L 65 15 L 55 17" stroke="#8B1538" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Text -->
+  <text x="75" y="35" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#8B1538">NETWORLD</text>
+  <text x="75" y="50" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#8B1538">CAPITAL</text>
+  <text x="75" y="65" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#8B1538">VENTURES</text>
+  <text x="165" y="65" font-family="Arial, sans-serif" font-size="8" fill="#2563EB">INC.</text>
+</svg>

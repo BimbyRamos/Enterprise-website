@@ -1,0 +1,73 @@
+╔════════════════════════════════════════════════════════════╗
+║                                                            ║
+║        ENTERPRISE CORPORATE WEBSITE - QUICK START         ║
+║                                                            ║
+╚════════════════════════════════════════════════════════════╝
+
+🚀 EASIEST WAY TO START:
+   
+   1. Double-click: start-website.bat
+   2. Wait for "Ready in X.Xs" message
+   3. Open browser: http://localhost:3000
+
+───────────────────────────────────────────────────────────
+
+📍 AVAILABLE PAGES:
+
+   Homepage:    http://localhost:3000
+   Services:    http://localhost:3000/services
+   Industries:  http://localhost:3000/industries
+   Contact:     http://localhost:3000/contact  ← NEW!
+
+───────────────────────────────────────────────────────────
+
+🛑 TO STOP THE SERVER:
+
+   Press Ctrl + C in the terminal window
+
+───────────────────────────────────────────────────────────
+
+❓ TROUBLESHOOTING:
+
+   Problem: PowerShell script error
+   Solution: Use Command Prompt (cmd) instead
+   
+   Problem: Port 3000 already in use
+   Solution: Stop other servers or use: npm run dev -- -p 3001
+   
+   Problem: Module not found
+   Solution: Run: npm install
+
+───────────────────────────────────────────────────────────
+
+📚 MORE INFO:
+
+   Full guide:     HOW_TO_RUN.md
+   Website guide:  WEBSITE_GUIDE.md
+   
+───────────────────────────────────────────────────────────
+
+✨ WHAT'S NEW - CONTACT PAGE:
+
+   ✓ Contact form with validation
+   ✓ Office locations display
+   ✓ Real-time error messages
+   ✓ Success/error feedback
+   ✓ Fully responsive design
+   ✓ Accessibility features
+
+───────────────────────────────────────────────────────────
+
+🎯 TRY THIS:
+
+   1. Go to: http://localhost:3000/contact
+   2. Fill out the form
+   3. Try submitting with:
+      - Valid data (see success!)
+      - Invalid email (see validation!)
+      - Empty fields (see errors!)
+
+───────────────────────────────────────────────────────────
+
+Need help? Check HOW_TO_RUN.md for detailed instructions!
+

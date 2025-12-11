@@ -1,0 +1,44 @@
+# Backend Dockerfile for Express API
+FROM node:20-alpine AS base
+
+# Install dependencies
+FROM base AS deps
+WORKDIR /app
+
+COPY backend/package*.json ./
+RUN npm ci --only=production
+
+# Development dependencies
+FROM base AS dev-deps
+WORKDIR /app
+
+COPY backend/package*.json ./
+RUN npm ci
+
+# Build TypeScript
+FROM base AS builder
+WORKDIR /app
+
+COPY --from=dev-deps /app/node_modules ./node_modules
+COPY backend/ ./
+
+RUN npm run build
+
+# Production image
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 expressjs
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY backend/package*.json ./
+
+USER expressjs
+
+EXPOSE 4000
+
+CMD ["node", "dist/server.js"]

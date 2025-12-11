@@ -1,0 +1,168 @@
+╔══════════════════════════════════════════════════════════════╗
+║           STRAPI CMS - QUICK START GUIDE                     ║
+╚══════════════════════════════════════════════════════════════╝
+
+🎉 CONGRATULATIONS! Strapi is running at:
+   http://localhost:1337/admin
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 STEP-BY-STEP GUIDE:
+
+STEP 1: CREATE CONTENT TYPES (5 minutes)
+────────────────────────────────────────
+1. Click "Content-Type Builder" (left sidebar)
+2. Click "Create new collection type"
+3. Create these types:
+   
+   ✓ Service
+     Fields: title, slug, description, icon, featured_image, 
+             features (JSON), benefits (JSON)
+   
+   ✓ Project
+     Fields: title, slug, description, client, year, 
+             technologies (JSON), images, featured, category
+   
+   ✓ Industry
+     Fields: name, slug, description, icon, image
+   
+   ✓ Team Member
+     Fields: name, position, bio, photo, email, linkedin
+   
+   ✓ Blog Post
+     Fields: title, slug, excerpt, content, author, 
+             featured_image, category, published_date
+
+4. Click "Save" after each (Strapi will restart)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 2: ADD SAMPLE CONTENT (10 minutes)
+────────────────────────────────────────
+1. Click "Content Manager" (left sidebar)
+2. Select "Service"
+3. Click "Create new entry"
+4. Fill in:
+   - Title: "Enterprise Architecture Consultancy"
+   - Description: Your service description
+   - Icon: 🏛️
+   - Features: Copy from guide
+   - Benefits: Copy from guide
+5. Click "Save" then "Publish"
+6. Repeat for 3-5 services
+
+Do the same for Projects, Industries, etc.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 3: SET API PERMISSIONS (2 minutes)
+────────────────────────────────────────
+1. Click "Settings" (left sidebar)
+2. Click "Users & Permissions Plugin" → "Roles"
+3. Click "Public"
+4. For each content type, check:
+   ✓ find
+   ✓ findOne
+5. Click "Save"
+
+Now your website can access the content!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 4: TEST YOUR API (1 minute)
+────────────────────────────────────────
+Open browser and visit:
+   http://localhost:1337/api/services
+
+You should see JSON data with your services!
+
+Other endpoints:
+   http://localhost:1337/api/projects
+   http://localhost:1337/api/industries
+   http://localhost:1337/api/team-members
+   http://localhost:1337/api/blog-posts
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📸 UPLOADING IMAGES:
+────────────────────────────────────────
+1. Click "Media Library" (left sidebar)
+2. Click "Add new assets"
+3. Drag & drop your images
+4. Click "Upload"
+
+Recommended sizes:
+- Services: 800x600px
+- Projects: 1200x800px
+- Team photos: 400x400px
+- Blog images: 1200x630px
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔄 DAILY USAGE:
+────────────────────────────────────────
+ADD CONTENT:
+  Content Manager → Select type → Create new entry
+  → Fill fields → Save → Publish
+
+EDIT CONTENT:
+  Content Manager → Select type → Click entry
+  → Make changes → Save → Publish
+
+DELETE CONTENT:
+  Open entry → Click "..." → Delete → Confirm
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎯 WHAT YOU CAN MANAGE:
+────────────────────────────────────────
+✓ Services & Products
+✓ Projects & Case Studies
+✓ Industries & Sectors
+✓ Team Members
+✓ Blog Posts & News
+✓ Images & Media Files
+✓ All website content!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 PRO TIPS:
+────────────────────────────────────────
+• Save without publishing to work on drafts
+• Use "Duplicate" to copy similar content
+• Search bar helps find content quickly
+• Ctrl+S to save, Ctrl+P to publish
+• Always click "Publish" to make content live!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 STARTING/STOPPING STRAPI:
+────────────────────────────────────────
+START:
+  cd strapi
+  npm run develop
+
+STOP:
+  Press Ctrl + C in terminal
+
+ACCESS:
+  http://localhost:1337/admin
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📚 NEED MORE HELP?
+────────────────────────────────────────
+Read the full guide: STRAPI_USER_GUIDE.md
+Strapi Docs: https://docs.strapi.io
+Ask me for help anytime!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ YOU'RE READY TO GO!
+
+Start by creating your first content type, then add some content.
+Your website will automatically fetch and display it!
+
+Happy content managing! 🎉
+
+╚══════════════════════════════════════════════════════════════╝
