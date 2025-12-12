@@ -6,6 +6,7 @@ import AboutUs from '@/components/AboutUs';
 import FeaturedServices from '@/components/FeaturedServices';
 import Projects from '@/components/Projects';
 import Industries from '@/components/Industries';
+import Newsletter from '@/components/Newsletter';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { fetchServices } from '@/lib/api';
 import type { Service } from '@/lib/api';
@@ -57,6 +58,11 @@ export default function Home() {
       {/* Industries Section */}
       <ErrorBoundary>
         <Industries />
+      </ErrorBoundary>
+
+      {/* Newsletter Section */}
+      <ErrorBoundary>
+        <Newsletter />
       </ErrorBoundary>
     </>
   );

@@ -122,7 +122,7 @@ const Hero: React.FC<HeroProps> = ({
                 window.location.href = ctaLink;
               }
             }}
-            className="shadow-premium hover:shadow-glow hover:scale-105 transition-all duration-300 px-8 py-4 text-lg font-semibold"
+            className="shadow-premium hover:shadow-glow hover:scale-[1.02] transition-all duration-300 min-w-[200px]"
           >
             {ctaText}
             <svg className="w-5 h-5 ml-2 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,10 +134,22 @@ const Hero: React.FC<HeroProps> = ({
             onClick={() => {
               document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-8 py-4 text-lg font-semibold rounded-button backdrop-blur-sm transition-all duration-300 hover:bg-white/10"
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 text-lg font-semibold rounded-button backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] min-w-[200px]"
             style={{
               color: 'white',
-              border: '2px solid rgba(255, 255, 255, 0.3)'
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              backgroundColor: 'rgba(255, 255, 255, 0.05)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.5)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.1)';
             }}
           >
             Learn More

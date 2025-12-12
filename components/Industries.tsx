@@ -294,50 +294,7 @@ const Industries: React.FC = () => {
           })}
         </div>
 
-        {/* Premium CTA Section */}
-        <div className="relative mt-20">
-          <div 
-            className="relative rounded-3xl overflow-hidden border border-white/10"
-            style={{
-              background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%)',
-              backdropFilter: 'blur(20px)'
-            }}
-          >
-            {/* Animated Border */}
-            <div className="absolute inset-0 rounded-3xl opacity-50"
-              style={{
-                background: 'linear-gradient(90deg, #8B1538, #2563EB, #8B1538)',
-                backgroundSize: '200% 100%',
-                animation: 'shimmer 3s linear infinite',
-                WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                WebkitMaskComposite: 'xor',
-                maskComposite: 'exclude',
-                padding: '2px'
-              }}
-            />
 
-            <div className="relative p-12 text-center">
-              <h3 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-                Ready to Transform Your Business?
-              </h3>
-              <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
-                Partner with us to leverage cutting-edge technology solutions tailored to your industry needs
-              </p>
-              <a
-                href="/#contact"
-                className="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl"
-                style={{
-                  background: 'linear-gradient(135deg, #8B1538 0%, #2563EB 100%)'
-                }}
-              >
-                <span>Get Started Today</span>
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </a>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Keyframe Animations */}

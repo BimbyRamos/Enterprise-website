@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface Project {
   id: string;
@@ -17,11 +18,6 @@ interface Project {
   metrics?: Array<{ label: string; value: string }>;
   challenge?: string;
   solution?: string;
-  testimonial?: {
-    quote: string;
-    author: string;
-    position: string;
-  };
 }
 
 const mockProjects: Project[] = [
@@ -42,12 +38,7 @@ const mockProjects: Project[] = [
       { label: 'Uptime', value: '99.9%' },
       { label: 'Cost Reduction', value: '35%' },
       { label: 'Security Score', value: '+85%' }
-    ],
-    testimonial: {
-      quote: 'The transformation exceeded our expectations. Network reliability is now world-class.',
-      author: 'John Martinez',
-      position: 'CTO'
-    }
+    ]
   },
   {
     id: '2',
@@ -66,12 +57,7 @@ const mockProjects: Project[] = [
       { label: 'Cost Savings', value: '40%' },
       { label: 'Performance', value: '+60%' },
       { label: 'Scalability', value: '10x' }
-    ],
-    testimonial: {
-      quote: 'Flawless execution. Our infrastructure is now more agile and cost-effective.',
-      author: 'Sarah Chen',
-      position: 'VP of Operations'
-    }
+    ]
   },
   {
     id: '3',
@@ -109,12 +95,7 @@ const mockProjects: Project[] = [
       { label: 'Threats Blocked', value: '99.9%' },
       { label: 'Compliance', value: '100%' },
       { label: 'Response Time', value: '-75%' }
-    ],
-    testimonial: {
-      quote: 'Our security posture has never been stronger. Peace of mind for our patients.',
-      author: 'Dr. Michael Roberts',
-      position: 'Chief Security Officer'
-    }
+    ]
   },
   {
     id: '5',
@@ -152,20 +133,38 @@ const mockProjects: Project[] = [
       { label: 'ROI Increase', value: '200%' },
       { label: 'Efficiency', value: '+45%' },
       { label: 'Downtime', value: '-90%' }
-    ],
-    testimonial: {
-      quote: 'Remarkable transformation. Our IT operations are now a competitive advantage.',
-      author: 'David Thompson',
-      position: 'Operations Director'
-    }
+    ]
   }
 ];
 
-const Projects: React.FC = () => {
+const ProjectsPage: React.FC = () => {
+  const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // Show only top 3 featured projects on homepage
-  const filteredProjects = mockProjects.slice(0, 3);
+  const categories = ['All', 'Network Infrastructure', 'Cloud Solutions', 'Digital Transformation', 'Cybersecurity', 'Data Analytics', 'IT Consulting'];
+  const PROJECTS_PER_PAGE = 12;
+
+  const filteredProjects = selectedCategory === 'All' 
+    ? mockProjects 
+    : mockProjects.filter(p => p.category === selectedCategory);
+
+  const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE;
+  const endIndex = startIndex + PROJECTS_PER_PAGE;
+  const currentProjects = filteredProjects.slice(startIndex, endIndex);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPage(1);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const getStatusColor = (status: Project['status']) => {
     switch (status) {
@@ -191,10 +190,8 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <section 
-      id="projects" 
-      className="relative py-16 md:py-24 px-4 overflow-hidden" 
-      aria-label="Projects"
+    <div 
+      className="min-h-screen relative py-16 md:py-24 px-4 overflow-hidden" 
       style={{
         background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 50%, #FFFFFF 100%)'
       }}
@@ -218,48 +215,74 @@ const Projects: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        {/* Section Header */}
-        <div className="text-center mb-16" style={{ opacity: 1, visibility: 'visible' }}>
-          <span 
-            className="inline-block px-4 py-2 mb-4 text-sm font-semibold rounded-full backdrop-blur-sm"
-            style={{
-              backgroundColor: 'rgba(139, 21, 56, 0.1)',
-              color: '#8B1538'
+        {/* Page Header */}
+        <div className="text-center mb-12">
+          <button 
+            onClick={() => {
+              router.push('/#projects');
+              // Small delay to ensure navigation completes before scrolling
+              setTimeout(() => {
+                const projectsSection = document.getElementById('projects');
+                if (projectsSection) {
+                  const headerOffset = 80;
+                  const elementPosition = projectsSection.getBoundingClientRect().top;
+                  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }, 100);
             }}
+            className="inline-flex items-center gap-2 text-sm font-semibold mb-4 transition-colors duration-300 hover:opacity-80 cursor-pointer"
+            style={{ color: '#8B1538' }}
           >
-            Our Work
-          </span>
-          <h2 
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Home
+          </button>
+          
+          <h1 
             className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6"
-            style={{ 
-              color: '#0F172A',
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              opacity: 1,
-              visibility: 'visible'
-            }}
+            style={{ color: '#0F172A' }}
           >
-            Featured Projects
-          </h2>
+            All Projects
+          </h1>
           <div 
             className="w-24 h-1 mx-auto mb-6 rounded-full" 
-            style={{ 
-              background: 'linear-gradient(90deg, #8B1538 0%, #2563EB 100%)',
-              opacity: 1
-            }} 
+            style={{ background: 'linear-gradient(90deg, #8B1538 0%, #2563EB 100%)' }} 
           />
           <p 
             className="text-lg md:text-xl max-w-3xl mx-auto leading-relaxed"
-            style={{ color: '#475569', opacity: 1 }}
+            style={{ color: '#475569' }}
           >
-            Delivering excellence through innovative ICT solutions and strategic implementations that transform businesses and drive measurable results
+            Explore our complete portfolio of innovative ICT solutions and successful implementations
           </p>
         </div>
 
-        {/* Category Filter - Hidden on homepage, only 3 featured projects shown */}
+        {/* Category Filter */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => handleCategoryChange(category)}
+              className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105"
+              style={{
+                backgroundColor: selectedCategory === category ? '#8B1538' : 'white',
+                color: selectedCategory === category ? 'white' : '#475569',
+                border: `2px solid ${selectedCategory === category ? '#8B1538' : '#E5E7EB'}`,
+                boxShadow: selectedCategory === category ? '0 4px 12px rgba(139, 21, 56, 0.2)' : 'none'
+              }}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16">
-          {filteredProjects.map((project, index) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
+          {currentProjects.map((project, index) => {
             const isExpanded = expandedProject === project.id;
             const statusColors = getStatusColor(project.status);
 
@@ -278,7 +301,7 @@ const Projects: React.FC = () => {
                   }}
                 />
 
-                {/* Animated Border Glow - Outside the card */}
+                {/* Animated Border Glow */}
                 <div 
                   className="absolute -inset-1 rounded-3xl transition-opacity duration-500 opacity-0 group-hover:opacity-30 pointer-events-none"
                   style={{
@@ -291,25 +314,21 @@ const Projects: React.FC = () => {
                 <div className="relative p-8 flex flex-col h-full">
                   {/* Header Section */}
                   <div className="flex items-start justify-between mb-4">
-                    {/* Status Badge */}
-                    <div className="flex items-center gap-2">
+                    <span 
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border-2 transition-all duration-300"
+                      style={{
+                        backgroundColor: statusColors.bg,
+                        color: statusColors.text,
+                        borderColor: statusColors.border
+                      }}
+                    >
                       <span 
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-full border-2 transition-all duration-300"
-                        style={{
-                          backgroundColor: statusColors.bg,
-                          color: statusColors.text,
-                          borderColor: statusColors.border
-                        }}
-                      >
-                        <span 
-                          className="w-2 h-2 rounded-full animate-pulse"
-                          style={{ backgroundColor: statusColors.text }}
-                        />
-                        {project.status}
-                      </span>
-                    </div>
+                        className="w-2 h-2 rounded-full animate-pulse"
+                        style={{ backgroundColor: statusColors.text }}
+                      />
+                      {project.status}
+                    </span>
 
-                    {/* Category Icon */}
                     <div 
                       className="w-12 h-12 flex items-center justify-center rounded-xl shadow-md transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500"
                       style={{
@@ -419,23 +438,23 @@ const Projects: React.FC = () => {
 
                   {/* Expandable Details */}
                   {isExpanded && (
-                    <div className="space-y-4 mb-5 relative" style={{ opacity: 1, zIndex: 5 }}>
+                    <div className="space-y-4 mb-5">
                       {project.challenge && (
                         <div className="bg-white p-4 rounded-lg">
-                          <h4 className="text-sm font-bold mb-2" style={{ color: '#0F172A', opacity: 1 }}>
+                          <h4 className="text-sm font-bold mb-2" style={{ color: '#0F172A' }}>
                             Challenge
                           </h4>
-                          <p className="text-sm leading-relaxed" style={{ color: '#475569', opacity: 1 }}>
+                          <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>
                             {project.challenge}
                           </p>
                         </div>
                       )}
                       {project.solution && (
                         <div className="bg-white p-4 rounded-lg">
-                          <h4 className="text-sm font-bold mb-2" style={{ color: '#0F172A', opacity: 1 }}>
+                          <h4 className="text-sm font-bold mb-2" style={{ color: '#0F172A' }}>
                             Solution
                           </h4>
-                          <p className="text-sm leading-relaxed" style={{ color: '#475569', opacity: 1 }}>
+                          <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>
                             {project.solution}
                           </p>
                         </div>
@@ -443,27 +462,22 @@ const Projects: React.FC = () => {
                     </div>
                   )}
 
-                  {/* CTA Buttons */}
+                  {/* CTA Button */}
                   <div className="flex gap-3 mt-auto pt-4">
                     <button
                       onClick={() => setExpandedProject(isExpanded ? null : project.id)}
                       className="flex-1 flex items-center justify-center gap-2 font-semibold py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
                       style={{
                         backgroundColor: '#8B1538',
-                        color: '#FFFFFF',
-                        opacity: 1,
-                        zIndex: 10
+                        color: '#FFFFFF'
                       }}
                     >
-                      <span style={{ color: '#FFFFFF', opacity: 1 }}>
-                        {isExpanded ? 'Show Less' : 'View Details'}
-                      </span>
+                      <span>{isExpanded ? 'Show Less' : 'View Details'}</span>
                       <svg
                         className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
                         fill="none"
-                        stroke="#FFFFFF"
+                        stroke="currentColor"
                         viewBox="0 0 24 24"
-                        style={{ opacity: 1 }}
                       >
                         <path
                           strokeLinecap="round"
@@ -475,14 +489,6 @@ const Projects: React.FC = () => {
                     </button>
                   </div>
                 </div>
-
-                {/* Decorative corner element */}
-                <div 
-                  className="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                  style={{
-                    background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.15) 0%, transparent 100%)'
-                  }}
-                />
 
                 {/* Bottom accent line */}
                 <div 
@@ -498,73 +504,49 @@ const Projects: React.FC = () => {
           })}
         </div>
 
-        {/* Success Stats Section */}
-        <div className="max-w-6xl mx-auto mb-16">
-          <div 
-            className="relative bg-white p-8 md:p-12 rounded-3xl border border-neutral-200 shadow-premium overflow-hidden"
-          >
-            {/* Gradient Background */}
-            <div 
-              className="absolute inset-0 opacity-5"
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               style={{
-                backgroundImage: 'radial-gradient(circle at 20% 50%, #8B1538 0%, transparent 50%), radial-gradient(circle at 80% 50%, #2563EB 0%, transparent 50%)'
+                backgroundColor: currentPage === 1 ? '#E5E7EB' : '#8B1538',
+                color: currentPage === 1 ? '#9CA3AF' : 'white'
               }}
-            />
+            >
+              Previous
+            </button>
             
-            <div className="relative z-10">
-              <h3 
-                className="text-2xl md:text-3xl font-bold text-center mb-8"
-                style={{ color: '#0F172A' }}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <button
+                key={page}
+                onClick={() => handlePageChange(page)}
+                className="px-4 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105"
+                style={{
+                  backgroundColor: currentPage === page ? '#8B1538' : 'white',
+                  color: currentPage === page ? 'white' : '#475569',
+                  border: `2px solid ${currentPage === page ? '#8B1538' : '#E5E7EB'}`
+                }}
               >
-                Our Impact in Numbers
-              </h3>
-              
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                {[
-                  { value: '500+', label: 'Projects Delivered', icon: '🚀' },
-                  { value: '98%', label: 'Success Rate', icon: '⭐' },
-                  { value: '15+', label: 'Years Experience', icon: '📅' },
-                  { value: '24/7', label: 'Support Available', icon: '🛡️' },
-                ].map((stat, idx) => (
-                  <div key={idx} className="text-center">
-                    <div className="text-4xl mb-3 transform hover:scale-110 transition-transform duration-300">
-                      {stat.icon}
-                    </div>
-                    <div 
-                      className="text-3xl md:text-4xl font-bold mb-2"
-                      style={{ color: '#8B1538' }}
-                    >
-                      {stat.value}
-                    </div>
-                    <div 
-                      className="text-sm font-medium"
-                      style={{ color: '#64748B' }}
-                    >
-                      {stat.label}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+                {page}
+              </button>
+            ))}
+            
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: currentPage === totalPages ? '#E5E7EB' : '#8B1538',
+                color: currentPage === totalPages ? '#9CA3AF' : 'white'
+              }}
+            >
+              Next
+            </button>
           </div>
-        </div>
-
-        {/* View All Projects Button */}
-        <div className="text-center">
-          <a
-            href="/projects"
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-white transition-all duration-500 hover:scale-105 hover:shadow-xl group"
-            style={{
-              background: 'linear-gradient(135deg, #8B1538 0%, #2563EB 100%)',
-              boxShadow: '0 4px 16px rgba(139, 21, 56, 0.3)'
-            }}
-          >
-            <span>View All Projects</span>
-            <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </a>
-        </div>
+        )}
       </div>
 
       {/* Add keyframe animations */}
@@ -573,18 +555,9 @@ const Projects: React.FC = () => {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-20px) rotate(5deg); }
         }
-        
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out;
-        }
       `}</style>
-    </section>
+    </div>
   );
 };
 
-export default Projects;
+export default ProjectsPage;

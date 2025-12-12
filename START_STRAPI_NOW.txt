@@ -1,0 +1,76 @@
+🚀 HOW TO START STRAPI CMS
+==========================
+
+📋 QUICK START (3 STEPS):
+--------------------------
+
+STEP 1: Open Terminal/Command Prompt
+   - Press Windows Key + R
+   - Type: cmd
+   - Press Enter
+
+STEP 2: Navigate to Your Project
+   cd "C:\Users\aqramos\Kiro website new"
+
+STEP 3: Start Strapi
+   docker-compose up strapi
+
+   OR if that doesn't work:
+   
+   docker-compose up
+
+
+✅ WHAT TO EXPECT:
+------------------
+- Docker will start the Strapi container
+- You'll see logs in the terminal
+- Wait for: "Server started on port 1337"
+- This takes about 30-60 seconds
+
+
+🌐 ACCESS STRAPI:
+-----------------
+Once started, open your browser and go to:
+
+   http://localhost:1337/admin
+
+First time? You'll need to create an admin account:
+   - Email: your-email@example.com
+   - Password: (choose a strong password)
+   - Username: admin
+
+
+🛑 TO STOP STRAPI:
+------------------
+Press: Ctrl + C in the terminal
+
+
+📝 ALTERNATIVE METHOD (Using the Batch File):
+----------------------------------------------
+Double-click this file in your project folder:
+   setup-strapi.bat
+
+This will automatically start Strapi for you!
+
+
+💡 TROUBLESHOOTING:
+-------------------
+If you get "Docker is not running":
+   1. Open Docker Desktop
+   2. Wait for it to fully start
+   3. Try the command again
+
+If port 1337 is already in use:
+   docker-compose down
+   docker-compose up strapi
+
+
+🎯 QUICK REFERENCE:
+-------------------
+Start:  docker-compose up strapi
+Stop:   Ctrl + C
+Restart: docker-compose restart strapi
+Logs:   docker-compose logs strapi
+
+
+Your Strapi CMS will be ready to manage your website content! 🎉

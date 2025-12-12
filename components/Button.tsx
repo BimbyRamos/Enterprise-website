@@ -19,7 +19,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const sizeStyles = {
       sm: 'h-8 px-4 text-small',
       md: 'h-10 px-6 text-body',
-      lg: 'h-12 px-8 text-body',
+      lg: 'px-8 py-4 text-lg',
     };
     
     const combinedClassName = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;

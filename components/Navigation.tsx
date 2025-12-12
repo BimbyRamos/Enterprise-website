@@ -121,11 +121,17 @@ const Navigation: React.FC = () => {
         <Link 
           href="/" 
           className="flex items-center flex-shrink-0 hover:opacity-90 transition-all duration-500 ease-in-out focus-visible-ring rounded-lg group"
+          onClick={() => {
+            // Reset active section when logo is clicked
+            setActiveSection('');
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
         >
           <img 
-            src="/NCVI logo Dec 10.png" 
+            src="/Logo Footer Dec 10.jpg" 
             alt="Networld Capital Ventures, Inc." 
-            className="h-12 w-auto transition-transform duration-500 ease-in-out group-hover:scale-[1.03]"
+            className="h-14 w-auto transition-transform duration-500 ease-in-out group-hover:scale-[1.03]"
             style={{
               filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'
             }}
@@ -150,12 +156,14 @@ const Navigation: React.FC = () => {
                   <button
                     className={`px-6 py-3 text-base font-semibold rounded-xl transition-all duration-500 ease-in-out focus-visible-ring whitespace-nowrap relative overflow-hidden ${
                       isActive(item.href)
-                        ? 'text-white'
+                        ? 'text-primary-700'
                         : 'text-neutral-700 hover:text-primary-700'
                     }`}
                     style={isActive(item.href) ? {
-                      background: 'linear-gradient(135deg, #8B1538 0%, #2563EB 100%)',
-                      boxShadow: '0 4px 12px rgba(139, 21, 56, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.2)'
+                      background: 'rgba(255, 255, 255, 0.95)',
+                      backdropFilter: 'blur(12px)',
+                      border: '1px solid rgba(139, 21, 56, 0.15)',
+                      boxShadow: '0 4px 16px rgba(139, 21, 56, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.8)'
                     } : {
                       background: 'rgba(255, 255, 255, 0.6)',
                       backdropFilter: 'blur(10px)',
@@ -172,7 +180,8 @@ const Navigation: React.FC = () => {
                     {isActive(item.href) && (
                       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-full"
                         style={{ 
-                          background: 'rgba(255, 255, 255, 0.5)',
+                          background: 'linear-gradient(90deg, #8B1538 0%, #DC2626 100%)',
+                          boxShadow: '0 2px 8px rgba(139, 21, 56, 0.4)',
                           animation: 'expandWidth 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
                         }} />
                     )}
@@ -227,12 +236,14 @@ const Navigation: React.FC = () => {
                   onClick={(e) => handleSmoothScroll(e, item.href)}
                   className={`block px-6 py-3 text-base font-semibold rounded-xl transition-all duration-500 ease-in-out focus-visible-ring whitespace-nowrap relative overflow-hidden ${
                     isActive(item.href)
-                      ? 'text-white'
+                      ? 'text-primary-700'
                       : 'text-neutral-700 hover:text-primary-700 hover:scale-[1.02]'
                   }`}
                   style={isActive(item.href) ? {
-                    background: 'linear-gradient(135deg, #8B1538 0%, #2563EB 100%)',
-                    boxShadow: '0 4px 12px rgba(139, 21, 56, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.2)'
+                    background: 'rgba(255, 255, 255, 0.95)',
+                    backdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(139, 21, 56, 0.15)',
+                    boxShadow: '0 4px 16px rgba(139, 21, 56, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.8)'
                   } : {
                     background: 'rgba(255, 255, 255, 0.6)',
                     backdropFilter: 'blur(10px)',
@@ -244,7 +255,8 @@ const Navigation: React.FC = () => {
                   {isActive(item.href) && (
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 rounded-full"
                       style={{ 
-                        background: 'rgba(255, 255, 255, 0.5)',
+                        background: 'linear-gradient(90deg, #8B1538 0%, #DC2626 100%)',
+                        boxShadow: '0 2px 8px rgba(139, 21, 56, 0.4)',
                         animation: 'expandWidth 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
                       }} />
                   )}
@@ -341,9 +353,9 @@ const Navigation: React.FC = () => {
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b border-neutral-200">
             <img 
-              src="/NCVI logo Dec 10.png" 
+              src="/Logo Footer Dec 10.jpg" 
               alt="Networld Capital Ventures, Inc." 
-              className="h-12 w-auto"
+              className="h-14 w-auto"
               style={{
                 filter: 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))'
               }}

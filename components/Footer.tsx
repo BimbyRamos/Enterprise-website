@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 
 interface QuickLink {
@@ -15,22 +15,28 @@ interface QuickLinkCategory {
 
 const quickLinkCategories: QuickLinkCategory[] = [
   {
-    title: 'Products and Services',
+    title: 'Services',
     links: [
-      { label: 'Enterprise Architecture Consultancy', href: '/#services' },
+      { label: 'Enterprise Architecture', href: '/#services' },
       { label: 'Business Consultancy', href: '/#services' },
-      { label: 'Platform Development Factory', href: '/#services' },
-      { label: 'Platform Management (Buy & Manage)', href: '/#services' },
-      { label: 'Platform Management (AI Build)', href: '/#services' },
-      { label: 'Managed Cloud & Infrastructure', href: '/#services' },
-      { label: 'ICT Managed Services', href: '/#services' },
+      { label: 'Platform Development', href: '/#services' },
+      { label: 'Platform Management', href: '/#services' },
+    ],
+  },
+  {
+    title: 'Solutions',
+    links: [
+      { label: 'AI & Automation', href: '/#services' },
+      { label: 'Cloud Infrastructure', href: '/#services' },
+      { label: 'Managed Services', href: '/#services' },
+      { label: 'Operations Support', href: '/#services' },
     ],
   },
   {
     title: 'Company',
     links: [
       { label: 'About Us', href: '/#about' },
-      { label: 'Projects', href: '/#projects' },
+      { label: 'Projects', href: '/projects' },
       { label: 'Industries', href: '/#industries' },
       { label: 'Contact', href: '/contact' },
     ],
@@ -39,8 +45,8 @@ const quickLinkCategories: QuickLinkCategory[] = [
     title: 'Industries',
     links: [
       { label: 'PJ Lhuillier Group', href: '/#industries' },
-      { label: 'Financial Services & FinTech', href: '/#industries' },
-      { label: 'Microfinance Operations', href: '/#industries' },
+      { label: 'Financial Services', href: '/#industries' },
+      { label: 'Microfinance', href: '/#industries' },
       { label: 'Enterprise Systems', href: '/#industries' },
     ],
   },
@@ -101,35 +107,6 @@ const socialLinks: SocialLink[] = [
 ];
 
 const Footer: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState('');
-
-  const handleNewsletterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setMessage('');
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setMessage('Please enter a valid email address');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Simulate API call (will be replaced with actual API in later tasks)
-    try {
-      // TODO: Replace with actual API call in task 8.5
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setMessage('Thank you for subscribing!');
-      setEmail('');
-    } catch (error) {
-      setMessage('Something went wrong. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <footer 
@@ -165,62 +142,64 @@ const Footer: React.FC = () => {
         }}
       />
       
-      <div className="container mx-auto px-4 py-16 md:py-20 relative z-10">
+      <div className="container mx-auto px-4 py-8 md:py-10 relative z-10">
         {/* Top Accent Line */}
         <div 
-          className="w-24 h-1 mx-auto mb-12 rounded-full"
+          className="w-16 h-px mx-auto mb-6 rounded-full"
           style={{ background: 'linear-gradient(90deg, #8B1538 0%, #2563EB 100%)' }}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-6 lg:gap-8 mb-8">
           {/* Company Info Section */}
           <div className="lg:col-span-2">
             <Link href="/" className="group inline-block">
               <img 
                 src="/Logo Footer Dec 10.jpg" 
                 alt="Networld Capital Ventures, Inc." 
-                className="h-20 w-auto mb-6 transition-all duration-300 group-hover:scale-105"
+                className="h-12 w-auto mb-3 transition-all duration-300 group-hover:scale-105"
                 style={{
                   filter: 'drop-shadow(0 2px 8px rgba(255, 255, 255, 0.2))'
                 }}
               />
             </Link>
-            <p className="text-neutral-300 mb-6 leading-relaxed text-base">
-              The ICT arm of the PJ Lhuillier Group, delivering comprehensive technology solutions that empower businesses to thrive in the digital age.
+            <p className="text-neutral-400 mb-3 leading-relaxed text-sm">
+              The ICT arm of the PJ Lhuillier Group, delivering comprehensive technology solutions.
             </p>
             
             {/* Contact Info */}
-            <div className="space-y-3 mb-6">
-              <div className="flex items-center gap-3 text-neutral-300">
-                <span style={{ color: '#8B1538', fontSize: '18px' }}>📍</span>
-                <span className="text-sm">156 Jupiter, Makati City, Metro Manila</span>
+            <div className="space-y-1.5 mb-3">
+              <div className="flex items-start gap-2 text-neutral-400">
+                <span style={{ color: '#8B1538', fontSize: '15px' }} className="mt-0.5">📍</span>
+                <span className="text-sm leading-relaxed">156 Jupiter, Makati City</span>
               </div>
-              <div className="flex items-center gap-3 text-neutral-300">
-                <span style={{ color: '#8B1538', fontSize: '18px' }}>📞</span>
-                <a href="tel:(02)88955338" className="text-sm hover:text-primary-400 transition-colors">
+              <div className="flex items-center gap-2 text-neutral-400">
+                <span style={{ color: '#8B1538', fontSize: '15px' }}>📞</span>
+                <a href="tel:(02)88955338" className="text-sm hover:text-white transition-colors">
                   (02) 8895 5338
                 </a>
               </div>
-              <div className="flex items-center gap-3 text-neutral-300">
-                <span style={{ color: '#8B1538', fontSize: '18px' }}>✉️</span>
-                <a href="mailto:info@networldcapital.com" className="text-sm hover:text-primary-400 transition-colors">
+              <div className="flex items-center gap-2 text-neutral-400">
+                <span style={{ color: '#8B1538', fontSize: '15px' }}>✉️</span>
+                <a href="mailto:info@networldcapital.com" className="text-sm hover:text-white transition-colors">
                   info@networldcapital.com
                 </a>
               </div>
             </div>
 
             {/* Social Links */}
-            <div className="flex space-x-3">
+            <div className="flex space-x-2">
               {socialLinks.map((social, index) => (
                 <a
                   key={social.name}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-11 h-11 flex items-center justify-center bg-white/5 hover:bg-gradient-to-br hover:from-primary-700 hover:to-secondary-700 text-neutral-400 hover:text-white rounded-xl transition-all duration-300 hover:scale-110 hover:rotate-3 focus-visible-ring"
+                  className="w-8 h-8 flex items-center justify-center bg-white/5 hover:bg-gradient-to-br hover:from-primary-700 hover:to-secondary-700 text-neutral-400 hover:text-white rounded-lg transition-all duration-300 hover:scale-110 focus-visible-ring"
                   style={{ animationDelay: `${index * 50}ms` }}
                   aria-label={`Visit our ${social.name} page`}
                 >
-                  {social.icon}
+                  <div className="w-4 h-4">
+                    {social.icon}
+                  </div>
                 </a>
               ))}
             </div>
@@ -229,22 +208,15 @@ const Footer: React.FC = () => {
           {/* Quick Links */}
           {quickLinkCategories.map((category, catIndex) => (
             <div key={category.title} style={{ animationDelay: `${catIndex * 100}ms` }}>
-              <h3 className="text-lg font-bold mb-5 text-white flex items-center gap-2">
+              <h3 className="text-sm font-bold mb-2.5 text-white">
                 {category.title}
-                <div 
-                  className="h-0.5 flex-1 rounded-full"
-                  style={{ 
-                    background: 'linear-gradient(90deg, rgba(139, 21, 56, 0.5) 0%, transparent 100%)',
-                    maxWidth: '40px'
-                  }}
-                />
               </h3>
-              <ul className="space-y-3">
+              <ul className="space-y-1.5">
                 {category.links.map((link) => (
                   <li key={link.href} className="group">
                     <Link
                       href={link.href}
-                      className="text-neutral-400 hover:text-primary-400 transition-all duration-300 focus-visible-ring rounded inline-flex items-center gap-2"
+                      className="text-sm text-neutral-400 hover:text-white transition-all duration-300 focus-visible-ring rounded inline-flex items-center gap-1.5"
                       onClick={(e) => {
                         if (link.href.startsWith('#')) {
                           e.preventDefault();
@@ -262,8 +234,8 @@ const Footer: React.FC = () => {
                         }
                       }}
                     >
-                      <span className="text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">→</span>
-                      <span className="group-hover:translate-x-1 transition-transform duration-300">{link.label}</span>
+                      <span className="text-primary-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs">→</span>
+                      <span className="group-hover:translate-x-0.5 transition-transform duration-300">{link.label}</span>
                     </Link>
                   </li>
                 ))}
@@ -272,132 +244,32 @@ const Footer: React.FC = () => {
           ))}
         </div>
 
-        {/* Newsletter Signup */}
-        <div className="border-t border-white/10 pt-12 mb-12">
-          <div className="max-w-3xl mx-auto">
-            <div className="relative bg-white/5 backdrop-blur-sm p-8 md:p-10 rounded-3xl border border-white/10 overflow-hidden">
-              {/* Decorative gradient */}
-              <div 
-                className="absolute inset-0 opacity-10"
-                style={{
-                  background: 'radial-gradient(circle at 30% 50%, #8B1538 0%, transparent 70%)'
-                }}
-              />
-              
-              <div className="relative text-center">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div 
-                    className="w-12 h-12 flex items-center justify-center rounded-xl"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.3) 0%, rgba(37, 99, 235, 0.3) 100%)'
-                    }}
-                  >
-                    <span className="text-2xl">📬</span>
-                  </div>
-                  <h3 className="text-2xl md:text-3xl font-bold text-white">Stay Informed</h3>
-                </div>
-                <p className="text-neutral-300 mb-8 text-base">
-                  Get the latest insights on ICT solutions, technology trends, and digital transformation strategies delivered to your inbox.
-                </p>
-                <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="your.email@company.com"
-                    className="flex-1 px-5 py-4 rounded-xl bg-white/10 border-2 border-white/20 text-white placeholder-neutral-400 focus:outline-none focus:border-primary-400 transition-all duration-300"
-                    required
-                    aria-label="Email address for newsletter"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="px-8 py-4 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                    style={{
-                      background: isSubmitting ? '#64748B' : 'linear-gradient(135deg, #8B1538 0%, #2563EB 100%)'
-                    }}
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Subscribing...
-                      </span>
-                    ) : (
-                      'Subscribe'
-                    )}
-                  </button>
-                </form>
-                {message && (
-                  <div
-                    className={`mt-4 p-3 rounded-xl ${
-                      message.includes('Thank you') 
-                        ? 'bg-green-500/20 text-green-300 border border-green-500/30' 
-                        : 'bg-red-500/20 text-red-300 border border-red-500/30'
-                    }`}
-                    role="status"
-                    aria-live="polite"
-                  >
-                    <p className="text-sm font-medium">{message}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Copyright */}
-        <div className="border-t border-white/10 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex flex-col md:flex-row items-center gap-4 text-neutral-400 text-sm">
-              <p>
-                © {new Date().getFullYear()} Networld Capital Ventures, Inc. All rights reserved.
-              </p>
-              <span className="hidden md:inline text-neutral-600">|</span>
-              <p className="text-neutral-500">
-                Part of PJ Lhuillier Group of Companies
-              </p>
+        <div className="border-t border-white/10 pt-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-xs">
+            <div className="flex flex-col md:flex-row items-center gap-2 text-neutral-500">
+              <p>© {new Date().getFullYear()} Networld Capital Ventures, Inc.</p>
+              <span className="hidden md:inline text-neutral-600">•</span>
+              <p className="text-neutral-600">Part of PJ Lhuillier Group</p>
             </div>
-            <div className="flex flex-wrap justify-center gap-6 text-sm">
-              <Link 
-                href="/privacy" 
-                className="text-neutral-400 hover:text-primary-400 transition-all duration-300 hover:translate-x-1"
+            <div className="flex flex-wrap justify-center gap-3">
+              <Link href="/privacy" className="text-neutral-500 hover:text-white transition-colors">Privacy</Link>
+              <span className="text-neutral-700">•</span>
+              <Link href="/terms" className="text-neutral-500 hover:text-white transition-colors">Terms</Link>
+              <span className="text-neutral-700">•</span>
+              <Link href="/cookies" className="text-neutral-500 hover:text-white transition-colors">Cookies</Link>
+              <span className="text-neutral-700">•</span>
+              <button
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="text-neutral-500 hover:text-white transition-colors inline-flex items-center gap-1"
+                aria-label="Back to top"
               >
-                Privacy Policy
-              </Link>
-              <Link 
-                href="/terms" 
-                className="text-neutral-400 hover:text-primary-400 transition-all duration-300 hover:translate-x-1"
-              >
-                Terms of Service
-              </Link>
-              <Link 
-                href="/cookies" 
-                className="text-neutral-400 hover:text-primary-400 transition-all duration-300 hover:translate-x-1"
-              >
-                Cookie Policy
-              </Link>
+                <span>Top</span>
+                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                </svg>
+              </button>
             </div>
-          </div>
-
-          {/* Back to Top Button */}
-          <div className="text-center mt-8">
-            <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 hover:-translate-y-1"
-              style={{
-                background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.3) 0%, rgba(37, 99, 235, 0.3) 100%)',
-                border: '1px solid rgba(255, 255, 255, 0.1)'
-              }}
-              aria-label="Back to top"
-            >
-              <span>Back to Top</span>
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
-              </svg>
-            </button>
           </div>
         </div>
       </div>

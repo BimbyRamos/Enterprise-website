@@ -190,19 +190,19 @@ const FeaturedServices: React.FC<FeaturedServicesProps> = ({ services, isLoading
               borderColor: 'rgba(139, 21, 56, 0.1)'
             }}>
             {/* Scroll hint badge - Top right */}
-            <div className="absolute top-3 right-6 z-30 scroll-indicator-animate">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold backdrop-blur-md"
+            <div className="absolute top-4 right-6 z-30 scroll-indicator-animate">
+              <div className="flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold backdrop-blur-md"
                 style={{ 
                   background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.12), rgba(37, 99, 235, 0.12))',
                   color: '#8B1538',
                   border: '1.5px solid rgba(139, 21, 56, 0.25)',
                   boxShadow: '0 2px 8px rgba(139, 21, 56, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.5)'
                 }}>
-                <svg className="w-3.5 h-3.5 scroll-arrow-left" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 scroll-arrow-left" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                 </svg>
                 <span className="tracking-wide">Scroll to explore</span>
-                <svg className="w-3.5 h-3.5 scroll-arrow-right" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 scroll-arrow-right" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
@@ -212,33 +212,11 @@ const FeaturedServices: React.FC<FeaturedServicesProps> = ({ services, isLoading
             <div className="absolute inset-0 pointer-events-none"
               style={{ background: 'linear-gradient(90deg, rgba(139, 21, 56, 0.02) 0%, rgba(37, 99, 235, 0.02) 100%)' }} />
             
-            {/* Enhanced scroll fade indicators with arrow buttons */}
-            <div className="absolute left-0 top-0 bottom-0 w-24 pointer-events-none z-20 flex items-center"
-              style={{ background: 'linear-gradient(to right, rgba(248, 250, 252, 0.95), transparent)' }}>
-              <div className="ml-3 w-10 h-10 rounded-full flex items-center justify-center scroll-indicator-animate"
-                style={{ 
-                  background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.12), rgba(37, 99, 235, 0.12))',
-                  border: '1.5px solid rgba(139, 21, 56, 0.2)',
-                  boxShadow: '0 2px 8px rgba(139, 21, 56, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.4)'
-                }}>
-                <svg className="w-5 h-5 scroll-arrow-left" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#8B1538' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-                </svg>
-              </div>
-            </div>
-            <div className="absolute right-0 top-0 bottom-0 w-24 pointer-events-none z-20 flex items-center justify-end"
-              style={{ background: 'linear-gradient(to left, rgba(248, 250, 252, 0.95), transparent)' }}>
-              <div className="mr-3 w-10 h-10 rounded-full flex items-center justify-center scroll-indicator-animate"
-                style={{ 
-                  background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.12), rgba(37, 99, 235, 0.12))',
-                  border: '1.5px solid rgba(139, 21, 56, 0.2)',
-                  boxShadow: '0 2px 8px rgba(139, 21, 56, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.4)'
-                }}>
-                <svg className="w-5 h-5 scroll-arrow-right" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ color: '#8B1538' }}>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
+            {/* Enhanced scroll fade indicators */}
+            <div className="absolute left-0 top-0 bottom-0 w-24 pointer-events-none z-20"
+              style={{ background: 'linear-gradient(to right, rgba(248, 250, 252, 0.95), transparent)' }} />
+            <div className="absolute right-0 top-0 bottom-0 w-24 pointer-events-none z-20"
+              style={{ background: 'linear-gradient(to left, rgba(248, 250, 252, 0.95), transparent)' }} />
             
             {/* Scrollable container with enhanced padding for scrollbar */}
             <div 
