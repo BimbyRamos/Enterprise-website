@@ -109,12 +109,14 @@ NEXT_PUBLIC_CMS_URL=https://your-strapi-url.com
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 ```
 
-### Optional (if using email):
+### Required for Contact Form:
 ```
 NEXT_PUBLIC_EMAILJS_SERVICE_ID=your_service_id
 NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=your_template_id
 NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
 ```
+
+**Note**: Contact form requires EmailJS setup. See `EMAILJS_QUICK_SETUP.txt` for instructions.
 
 ---
 
@@ -132,7 +134,8 @@ NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=your_public_key
 ✅ **Contact Page**
 - Removed from homepage
 - Standalone contact page at `/contact`
-- Ready for email integration
+- Working contact form with EmailJS integration
+- Form validation and success/error messages
 
 ✅ **Industries**
 - Fixed "Success Stories" section

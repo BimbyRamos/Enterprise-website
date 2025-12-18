@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
+import emailjs from '@emailjs/browser';
 
 const Map = dynamic(() => import('./Map'), {
   ssr: false,
@@ -31,6 +32,113 @@ interface ContactProps {
 
 const Contact: React.FC<ContactProps> = ({ locations, isLoading = false }) => {
   const [hoveredMethod, setHoveredMethod] = useState<number | null>(null);
+  
+  // Contact Form State
+  const [formData, setFormData] = useState({
+    from_name: '',
+    from_email: '',
+    from_phone: '',
+    subject: '',
+    message: ''
+  });
+  const [formStatus, setFormStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+
+  // Form validation
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+    
+    if (!formData.from_name.trim()) {
+      errors.from_name = 'Name is required';
+    }
+    
+    if (!formData.from_email.trim()) {
+      errors.from_email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.from_email)) {
+      errors.from_email = 'Invalid email format';
+    }
+    
+    if (!formData.from_phone.trim()) {
+      errors.from_phone = 'Phone is required';
+    }
+    
+    if (!formData.subject.trim()) {
+      errors.subject = 'Subject is required';
+    }
+    
+    if (!formData.message.trim()) {
+      errors.message = 'Message is required';
+    } else if (formData.message.trim().length < 10) {
+      errors.message = 'Message must be at least 10 characters';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    // Check if EmailJS is configured
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      console.error('EmailJS not configured. Please add environment variables.');
+      setFormStatus('error');
+      return;
+    }
+
+    setFormStatus('sending');
+
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        formData,
+        publicKey
+      );
+      
+      setFormStatus('success');
+      setFormData({
+        from_name: '',
+        from_email: '',
+        from_phone: '',
+        subject: '',
+        message: ''
+      });
+      
+      // Reset success message after 5 seconds
+      setTimeout(() => setFormStatus('idle'), 5000);
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      setFormStatus('error');
+      
+      // Reset error message after 5 seconds
+      setTimeout(() => setFormStatus('idle'), 5000);
+    }
+  };
+
+  // Handle input changes
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Clear error for this field when user starts typing
+    if (formErrors[name]) {
+      setFormErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
 
   const contactMethods = [
     {
@@ -143,10 +251,276 @@ const Contact: React.FC<ContactProps> = ({ locations, isLoading = false }) => {
           </p>
         </div>
 
-        {/* Main Content Grid - Two Columns */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-16">
-          {/* Left Column - Contact Methods & Quick Links */}
-          <div className="space-y-6">
+        {/* Main Content Grid - Three Columns */}
+        <div className="grid lg:grid-cols-3 gap-8 mb-16">
+          {/* Left Column - Contact Form */}
+          <div className="lg:col-span-1">
+            <div 
+              className="relative rounded-3xl overflow-hidden p-8"
+              style={{
+                background: 'rgba(255, 255, 255, 0.7)',
+                backdropFilter: 'blur(20px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              {/* Top Gradient Bar */}
+              <div 
+                className="absolute top-0 left-0 right-0 h-1"
+                style={{ 
+                  background: 'linear-gradient(90deg, #8B1538, #2563EB, #8B1538)', 
+                  backgroundSize: '200% 100%', 
+                  animation: 'shimmer 3s linear infinite' 
+                }} 
+              />
+
+              <h3 
+                className="text-2xl font-bold mb-6"
+                style={{ color: '#0F172A', letterSpacing: '-0.01em' }}
+              >
+                Send Message
+              </h3>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Name Field */}
+                <div>
+                  <label 
+                    htmlFor="from_name" 
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: '#0F172A' }}
+                  >
+                    Full Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="from_name"
+                    name="from_name"
+                    value={formData.from_name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl transition-all duration-300 focus:outline-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.8)',
+                      border: formErrors.from_name ? '2px solid #EF4444' : '1px solid rgba(139, 21, 56, 0.2)',
+                      color: '#0F172A'
+                    }}
+                    placeholder="John Doe"
+                  />
+                  {formErrors.from_name && (
+                    <p className="text-xs mt-1" style={{ color: '#EF4444' }}>
+                      {formErrors.from_name}
+                    </p>
+                  )}
+                </div>
+
+                {/* Email Field */}
+                <div>
+                  <label 
+                    htmlFor="from_email" 
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: '#0F172A' }}
+                  >
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    id="from_email"
+                    name="from_email"
+                    value={formData.from_email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl transition-all duration-300 focus:outline-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.8)',
+                      border: formErrors.from_email ? '2px solid #EF4444' : '1px solid rgba(139, 21, 56, 0.2)',
+                      color: '#0F172A'
+                    }}
+                    placeholder="john@example.com"
+                  />
+                  {formErrors.from_email && (
+                    <p className="text-xs mt-1" style={{ color: '#EF4444' }}>
+                      {formErrors.from_email}
+                    </p>
+                  )}
+                </div>
+
+                {/* Phone Field */}
+                <div>
+                  <label 
+                    htmlFor="from_phone" 
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: '#0F172A' }}
+                  >
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    id="from_phone"
+                    name="from_phone"
+                    value={formData.from_phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl transition-all duration-300 focus:outline-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.8)',
+                      border: formErrors.from_phone ? '2px solid #EF4444' : '1px solid rgba(139, 21, 56, 0.2)',
+                      color: '#0F172A'
+                    }}
+                    placeholder="+63 123 456 7890"
+                  />
+                  {formErrors.from_phone && (
+                    <p className="text-xs mt-1" style={{ color: '#EF4444' }}>
+                      {formErrors.from_phone}
+                    </p>
+                  )}
+                </div>
+
+                {/* Subject Field */}
+                <div>
+                  <label 
+                    htmlFor="subject" 
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: '#0F172A' }}
+                  >
+                    Subject *
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 rounded-xl transition-all duration-300 focus:outline-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.8)',
+                      border: formErrors.subject ? '2px solid #EF4444' : '1px solid rgba(139, 21, 56, 0.2)',
+                      color: '#0F172A'
+                    }}
+                    placeholder="How can we help?"
+                  />
+                  {formErrors.subject && (
+                    <p className="text-xs mt-1" style={{ color: '#EF4444' }}>
+                      {formErrors.subject}
+                    </p>
+                  )}
+                </div>
+
+                {/* Message Field */}
+                <div>
+                  <label 
+                    htmlFor="message" 
+                    className="block text-sm font-semibold mb-2"
+                    style={{ color: '#0F172A' }}
+                  >
+                    Message *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows={4}
+                    className="w-full px-4 py-3 rounded-xl transition-all duration-300 focus:outline-none resize-none"
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.8)',
+                      border: formErrors.message ? '2px solid #EF4444' : '1px solid rgba(139, 21, 56, 0.2)',
+                      color: '#0F172A'
+                    }}
+                    placeholder="Tell us about your project..."
+                  />
+                  {formErrors.message && (
+                    <p className="text-xs mt-1" style={{ color: '#EF4444' }}>
+                      {formErrors.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={formStatus === 'sending'}
+                  className="w-full py-4 px-6 rounded-xl font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{
+                    background: formStatus === 'sending' 
+                      ? 'linear-gradient(135deg, #64748B 0%, #475569 100%)'
+                      : 'linear-gradient(135deg, #8B1538 0%, #2563EB 100%)',
+                    color: '#FFFFFF',
+                    boxShadow: '0 4px 16px rgba(139, 21, 56, 0.3)'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (formStatus !== 'sending') {
+                      e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(139, 21, 56, 0.4)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 21, 56, 0.3)';
+                  }}
+                >
+                  {formStatus === 'sending' ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Sending...
+                    </span>
+                  ) : (
+                    <span className="flex items-center justify-center gap-2">
+                      Send Message
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                      </svg>
+                    </span>
+                  )}
+                </button>
+
+                {/* Success Message */}
+                {formStatus === 'success' && (
+                  <div 
+                    className="p-4 rounded-xl flex items-center gap-3"
+                    style={{
+                      background: 'rgba(34, 197, 94, 0.1)',
+                      border: '1px solid rgba(34, 197, 94, 0.3)'
+                    }}
+                  >
+                    <span className="text-2xl">✅</span>
+                    <div>
+                      <p className="text-sm font-bold" style={{ color: '#16A34A' }}>
+                        Message sent successfully!
+                      </p>
+                      <p className="text-xs" style={{ color: '#64748B' }}>
+                        We'll get back to you soon.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Error Message */}
+                {formStatus === 'error' && (
+                  <div 
+                    className="p-4 rounded-xl flex items-center gap-3"
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)'
+                    }}
+                  >
+                    <span className="text-2xl">❌</span>
+                    <div>
+                      <p className="text-sm font-bold" style={{ color: '#DC2626' }}>
+                        Failed to send message
+                      </p>
+                      <p className="text-xs" style={{ color: '#64748B' }}>
+                        Please try again or contact us directly.
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </form>
+            </div>
+          </div>
+
+          {/* Middle Column - Contact Methods & Quick Links */}
+          <div className="lg:col-span-1 space-y-6">
             {/* Contact Methods - Glass UI Cards */}
             <div 
               className="relative rounded-3xl overflow-hidden p-8"
@@ -298,6 +672,7 @@ const Contact: React.FC<ContactProps> = ({ locations, isLoading = false }) => {
 
           {/* Right Column - Office Location with Map */}
           {!isLoading && location && (
+            <div className="lg:col-span-1">
             <div 
               className="relative rounded-3xl overflow-hidden"
               style={{
@@ -494,6 +869,7 @@ const Contact: React.FC<ContactProps> = ({ locations, isLoading = false }) => {
                   </span>
                 </button>
               </div>
+            </div>
             </div>
           )}
         </div>

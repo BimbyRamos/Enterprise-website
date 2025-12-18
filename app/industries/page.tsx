@@ -254,9 +254,9 @@ export default function IndustriesPage() {
                     </p>
 
                     {/* Key Points */}
-                    {industry.caseExamples && industry.caseExamples.length > 0 && (
+                    {industry.keyPoints && industry.keyPoints.length > 0 && (
                       <div className="space-y-3">
-                        {industry.caseExamples.slice(0, 5).map((example, idx) => (
+                        {industry.keyPoints.slice(0, 5).map((point, idx) => (
                           <div 
                             key={idx}
                             className="flex items-start gap-3 transition-all duration-300"
@@ -271,7 +271,7 @@ export default function IndustriesPage() {
                               style={{ background: gradient }}
                             />
                             <span className="text-sm text-gray-400 leading-relaxed">
-                              {example.title || example.description}
+                              {point}
                             </span>
                           </div>
                         ))}

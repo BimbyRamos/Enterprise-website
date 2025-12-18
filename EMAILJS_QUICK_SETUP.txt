@@ -1,0 +1,113 @@
+🚀 EMAILJS SETUP - QUICK START GUIDE
+=====================================
+
+STEP 1: Install EmailJS Package
+--------------------------------
+Run this command in your terminal:
+
+npm install @emailjs/browser
+
+STEP 2: Create EmailJS Account
+-------------------------------
+1. Go to: https://www.emailjs.com/
+2. Click "Sign Up" (top right)
+3. Create free account with your email
+4. Verify your email address
+
+STEP 3: Add Email Service
+--------------------------
+1. In EmailJS dashboard, click "Email Services" (left sidebar)
+2. Click "Add New Service" button
+3. Choose "Gmail" (recommended)
+4. Click "Connect Account" and sign in with Gmail
+5. COPY the Service ID (looks like: service_xxxxxxx)
+
+STEP 4: Create Email Template
+------------------------------
+1. Click "Email Templates" (left sidebar)
+2. Click "Create New Template"
+3. Template Name: "Contact Form"
+4. In the template editor, paste this:
+
+   Subject: New Contact from {{from_name}}
+
+   You received a new message from your website:
+
+   Name: {{from_name}}
+   Email: {{from_email}}
+   Phone: {{from_phone}}
+   Subject: {{subject}}
+
+   Message:
+   {{message}}
+
+   ---
+   Sent from Networld Capital Website
+
+5. Click "Save"
+6. COPY the Template ID (looks like: template_xxxxxxx)
+
+STEP 5: Get Public Key
+-----------------------
+1. Click "Account" (left sidebar)
+2. Click "General" tab
+3. Find "Public Key" section
+4. COPY the Public Key (looks like: xxxxxxxxxxxxxxx)
+
+STEP 6: Add to Environment Variables
+-------------------------------------
+Open .env.local file and add these lines:
+
+NEXT_PUBLIC_EMAILJS_SERVICE_ID=service_xxxxxxx
+NEXT_PUBLIC_EMAILJS_TEMPLATE_ID=template_xxxxxxx
+NEXT_PUBLIC_EMAILJS_PUBLIC_KEY=xxxxxxxxxxxxxxx
+
+Replace the xxxxxxx with your actual values from steps 3, 4, and 5.
+
+STEP 7: Restart Development Server
+-----------------------------------
+1. Stop the website (Ctrl+C in terminal)
+2. Run: npm run dev
+3. Go to: http://localhost:3000/contact
+4. Test the contact form!
+
+STEP 8: Test the Form
+----------------------
+1. Fill out all fields in the contact form
+2. Click "Send Message"
+3. You should see "Message sent successfully!"
+4. Check your Gmail inbox for the email
+
+✅ DONE! Your contact form is now working!
+
+TROUBLESHOOTING:
+----------------
+❌ "Failed to send message"
+   → Check that all 3 environment variables are correct
+   → Make sure you restarted the dev server
+   → Check EmailJS dashboard for any errors
+
+❌ Email not received
+   → Check spam folder
+   → Verify email service is connected in EmailJS
+   → Make sure template is saved
+
+❌ "EmailJS not configured"
+   → Environment variables not set correctly
+   → Restart dev server after adding variables
+
+FREE TIER LIMITS:
+-----------------
+✅ 200 emails per month (free)
+✅ Upgrade to $7/month for 1,000 emails if needed
+
+IMPORTANT FOR VERCEL DEPLOYMENT:
+---------------------------------
+When you deploy to Vercel, you MUST add these same environment variables
+in the Vercel dashboard:
+1. Go to your project settings
+2. Click "Environment Variables"
+3. Add all 3 EmailJS variables
+4. Redeploy your site
+
+Need help? The contact form code is in: components/Contact.tsx
