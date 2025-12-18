@@ -1,22 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchProjects } from '@/lib/api';
+import type { Project as ProjectType } from '@/lib/api';
 
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  image?: string;
-  technologies?: string[];
-  status: 'Completed' | 'In Progress' | 'Planned';
-  client?: string;
-  duration?: string;
-  team?: string;
-  outcome?: string;
-  metrics?: Array<{ label: string; value: string }>;
-  challenge?: string;
-  solution?: string;
+interface Project extends ProjectType {
+  status?: 'Completed' | 'In Progress' | 'Planned';
   testimonial?: {
     quote: string;
     author: string;
@@ -24,148 +13,85 @@ interface Project {
   };
 }
 
-const mockProjects: Project[] = [
-  {
-    id: '1',
-    title: 'Enterprise Network Modernization',
-    description: 'Complete overhaul of legacy network infrastructure for a major financial institution, improving reliability and security.',
-    category: 'Network Infrastructure',
-    technologies: ['SD-WAN', 'Cisco', 'Fortinet'],
-    status: 'Completed',
-    client: 'Major Financial Institution',
-    duration: '6 months',
-    team: '12 specialists',
-    challenge: 'Legacy infrastructure causing frequent downtime and security vulnerabilities',
-    solution: 'Implemented modern SD-WAN architecture with enterprise-grade security protocols',
-    outcome: 'Achieved 99.9% uptime and enhanced security posture',
-    metrics: [
-      { label: 'Uptime', value: '99.9%' },
-      { label: 'Cost Reduction', value: '35%' },
-      { label: 'Security Score', value: '+85%' }
-    ],
-    testimonial: {
-      quote: 'The transformation exceeded our expectations. Network reliability is now world-class.',
-      author: 'John Martinez',
-      position: 'CTO'
-    }
-  },
-  {
-    id: '2',
-    title: 'Cloud Migration Initiative',
-    description: 'Seamless migration of on-premise applications to cloud infrastructure, reducing operational costs by 40%.',
-    category: 'Cloud Solutions',
-    technologies: ['AWS', 'Azure', 'Kubernetes'],
-    status: 'Completed',
-    client: 'Enterprise Corporation',
-    duration: '8 months',
-    team: '15 engineers',
-    challenge: 'Complex on-premise infrastructure with high operational costs and limited scalability',
-    solution: 'Multi-cloud strategy with containerized applications and automated scaling',
-    outcome: 'Zero-downtime migration with significant cost savings',
-    metrics: [
-      { label: 'Cost Savings', value: '40%' },
-      { label: 'Performance', value: '+60%' },
-      { label: 'Scalability', value: '10x' }
-    ],
-    testimonial: {
-      quote: 'Flawless execution. Our infrastructure is now more agile and cost-effective.',
-      author: 'Sarah Chen',
-      position: 'VP of Operations'
-    }
-  },
-  {
-    id: '3',
-    title: 'Digital Banking Platform',
-    description: 'Development and deployment of a modern digital banking platform serving over 1 million users.',
-    category: 'Digital Transformation',
-    technologies: ['React', 'Node.js', 'PostgreSQL'],
-    status: 'In Progress',
-    client: 'Leading Bank',
-    duration: '12 months',
-    team: '20 developers',
-    challenge: 'Outdated banking systems unable to meet modern customer expectations',
-    solution: 'Built responsive, secure platform with real-time transactions and AI-powered insights',
-    outcome: 'Enhanced customer experience with modern digital services',
-    metrics: [
-      { label: 'Active Users', value: '1M+' },
-      { label: 'Satisfaction', value: '95%' },
-      { label: 'Transactions', value: '5M/day' }
-    ]
-  },
-  {
-    id: '4',
-    title: 'Cybersecurity Framework Implementation',
-    description: 'Comprehensive security framework deployment including threat detection, prevention, and response systems.',
-    category: 'Cybersecurity',
-    technologies: ['SIEM', 'EDR', 'Zero Trust'],
-    status: 'Completed',
-    client: 'Healthcare Provider',
-    duration: '5 months',
-    team: '8 security experts',
-    challenge: 'Increasing cyber threats and regulatory compliance requirements',
-    solution: 'Deployed zero-trust architecture with AI-powered threat detection and response',
-    outcome: 'Achieved 100% compliance and enhanced threat protection',
-    metrics: [
-      { label: 'Threats Blocked', value: '99.9%' },
-      { label: 'Compliance', value: '100%' },
-      { label: 'Response Time', value: '-75%' }
-    ],
-    testimonial: {
-      quote: 'Our security posture has never been stronger. Peace of mind for our patients.',
-      author: 'Dr. Michael Roberts',
-      position: 'Chief Security Officer'
-    }
-  },
-  {
-    id: '5',
-    title: 'Business Intelligence Dashboard',
-    description: 'Real-time analytics platform providing actionable insights across multiple business units.',
-    category: 'Data Analytics',
-    technologies: ['Power BI', 'Tableau', 'Python'],
-    status: 'In Progress',
-    client: 'Retail Corporation',
-    duration: '7 months',
-    team: '10 data scientists',
-    challenge: 'Data silos preventing unified business insights and strategic decision-making',
-    solution: 'Integrated analytics platform with real-time dashboards and predictive modeling',
-    outcome: 'Real-time insights driving strategic decisions',
-    metrics: [
-      { label: 'Data Sources', value: '50+' },
-      { label: 'Faster Insights', value: '10x' },
-      { label: 'ROI', value: '+250%' }
-    ]
-  },
-  {
-    id: '6',
-    title: 'IT Infrastructure Optimization',
-    description: 'Strategic assessment and optimization of IT infrastructure for improved performance and cost efficiency.',
-    category: 'IT Consulting',
-    technologies: ['ITIL', 'DevOps', 'Automation'],
-    status: 'Completed',
-    client: 'Manufacturing Company',
-    duration: '4 months',
-    team: '6 consultants',
-    challenge: 'Inefficient IT operations causing productivity losses and high costs',
-    solution: 'Implemented DevOps practices with automated workflows and ITIL best practices',
-    outcome: 'Optimized infrastructure with improved ROI',
-    metrics: [
-      { label: 'ROI Increase', value: '200%' },
-      { label: 'Efficiency', value: '+45%' },
-      { label: 'Downtime', value: '-90%' }
-    ],
-    testimonial: {
-      quote: 'Remarkable transformation. Our IT operations are now a competitive advantage.',
-      author: 'David Thompson',
-      position: 'Operations Director'
-    }
-  }
-];
-
 const Projects: React.FC = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
 
+  useEffect(() => {
+    fetchProjects()
+      .then((data) => {
+        // Map projectStatus to status for compatibility
+        const mappedProjects = data.map(project => ({
+          ...project,
+          status: project.projectStatus === 'InProgress' ? 'In Progress' : project.projectStatus as 'Completed' | 'In Progress' | 'Planned'
+        }));
+        setProjects(mappedProjects);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching projects:', error);
+        setIsLoading(false);
+      });
+  }, []);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <section 
+        id="projects" 
+        className="relative py-16 md:py-24 px-4 overflow-hidden" 
+        aria-label="Projects"
+        style={{
+          background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 50%, #FFFFFF 100%)'
+        }}
+      >
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <div className="h-12 w-64 bg-gray-200 animate-pulse rounded mx-auto mb-6" />
+            <div className="h-6 w-96 bg-gray-200 animate-pulse rounded mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white p-8 rounded-3xl border border-gray-200 shadow-lg">
+                <div className="w-16 h-16 bg-gray-200 animate-pulse rounded-xl mb-6" />
+                <div className="h-6 w-3/4 bg-gray-200 animate-pulse rounded mb-4" />
+                <div className="h-4 w-full bg-gray-200 animate-pulse rounded mb-2" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   // Show only top 3 featured projects on homepage
-  const filteredProjects = mockProjects.slice(0, 3);
+  const filteredProjects = projects.slice(0, 3);
+
+  // If no projects from CMS, show message
+  if (projects.length === 0) {
+    return (
+      <section 
+        id="projects" 
+        className="relative py-16 md:py-24 px-4 overflow-hidden" 
+        aria-label="Projects"
+        style={{
+          background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 50%, #FFFFFF 100%)'
+        }}
+      >
+        <div className="max-w-7xl mx-auto relative z-10 text-center">
+          <h2 className="text-4xl font-bold mb-4" style={{ color: '#0F172A' }}>
+            Featured Projects
+          </h2>
+          <p className="text-lg" style={{ color: '#475569' }}>
+            Projects will be displayed here once added to the CMS.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+
 
   const getStatusColor = (status: Project['status']) => {
     switch (status) {
@@ -174,6 +100,8 @@ const Projects: React.FC = () => {
       case 'In Progress':
         return { bg: 'rgba(59, 130, 246, 0.1)', text: '#2563EB', border: '#3B82F6' };
       case 'Planned':
+        return { bg: 'rgba(139, 21, 56, 0.1)', text: '#8B1538', border: '#8B1538' };
+      default:
         return { bg: 'rgba(139, 21, 56, 0.1)', text: '#8B1538', border: '#8B1538' };
     }
   };
@@ -417,63 +345,80 @@ const Projects: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Expandable Details */}
-                  {isExpanded && (
+                  {/* Key Points Section - Always Visible */}
+                  <div className="space-y-3 mb-5">
+                    {project.challenge && (
+                      <div className="bg-gradient-to-br from-gray-50 to-white p-4 rounded-xl border border-gray-100">
+                        <h4 className="text-sm font-bold mb-2 flex items-center gap-2" style={{ color: '#0F172A' }}>
+                          <span style={{ color: '#8B1538' }}>🎯</span>
+                          Challenge
+                        </h4>
+                        <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>
+                          {project.challenge}
+                        </p>
+                      </div>
+                    )}
+                    {project.solution && (
+                      <div className="bg-gradient-to-br from-gray-50 to-white p-4 rounded-xl border border-gray-100">
+                        <h4 className="text-sm font-bold mb-2 flex items-center gap-2" style={{ color: '#0F172A' }}>
+                          <span style={{ color: '#8B1538' }}>💡</span>
+                          Solution
+                        </h4>
+                        <p className="text-sm leading-relaxed" style={{ color: '#475569' }}>
+                          {project.solution}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Expandable Outcome */}
+                  {isExpanded && project.outcome && (
                     <div className="space-y-4 mb-5 relative" style={{ opacity: 1, zIndex: 5 }}>
-                      {project.challenge && (
-                        <div className="bg-white p-4 rounded-lg">
-                          <h4 className="text-sm font-bold mb-2" style={{ color: '#0F172A', opacity: 1 }}>
-                            Challenge
-                          </h4>
-                          <p className="text-sm leading-relaxed" style={{ color: '#475569', opacity: 1 }}>
-                            {project.challenge}
-                          </p>
-                        </div>
-                      )}
-                      {project.solution && (
-                        <div className="bg-white p-4 rounded-lg">
-                          <h4 className="text-sm font-bold mb-2" style={{ color: '#0F172A', opacity: 1 }}>
-                            Solution
-                          </h4>
-                          <p className="text-sm leading-relaxed" style={{ color: '#475569', opacity: 1 }}>
-                            {project.solution}
-                          </p>
-                        </div>
-                      )}
+                      <div className="bg-gradient-to-br from-green-50 to-white p-4 rounded-xl border border-green-100">
+                        <h4 className="text-sm font-bold mb-2 flex items-center gap-2" style={{ color: '#0F172A', opacity: 1 }}>
+                          <span style={{ color: '#16A34A' }}>✨</span>
+                          Outcome
+                        </h4>
+                        <p className="text-sm leading-relaxed" style={{ color: '#475569', opacity: 1 }}>
+                          {project.outcome}
+                        </p>
+                      </div>
                     </div>
                   )}
 
-                  {/* CTA Buttons */}
-                  <div className="flex gap-3 mt-auto pt-4">
-                    <button
-                      onClick={() => setExpandedProject(isExpanded ? null : project.id)}
-                      className="flex-1 flex items-center justify-center gap-2 font-semibold py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
-                      style={{
-                        backgroundColor: '#8B1538',
-                        color: '#FFFFFF',
-                        opacity: 1,
-                        zIndex: 10
-                      }}
-                    >
-                      <span style={{ color: '#FFFFFF', opacity: 1 }}>
-                        {isExpanded ? 'Show Less' : 'View Details'}
-                      </span>
-                      <svg
-                        className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
-                        fill="none"
-                        stroke="#FFFFFF"
-                        viewBox="0 0 24 24"
-                        style={{ opacity: 1 }}
+                  {/* CTA Buttons - Only show if there's an outcome to display */}
+                  {project.outcome && (
+                    <div className="flex gap-3 mt-auto pt-4">
+                      <button
+                        onClick={() => setExpandedProject(isExpanded ? null : project.id)}
+                        className="flex-1 flex items-center justify-center gap-2 font-semibold py-3 px-4 rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                        style={{
+                          backgroundColor: '#8B1538',
+                          color: '#FFFFFF',
+                          opacity: 1,
+                          zIndex: 10
+                        }}
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </button>
-                  </div>
+                        <span style={{ color: '#FFFFFF', opacity: 1 }}>
+                          {isExpanded ? 'Hide Outcome' : 'View Outcome'}
+                        </span>
+                        <svg
+                          className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-180' : ''}`}
+                          fill="none"
+                          stroke="#FFFFFF"
+                          viewBox="0 0 24 24"
+                          style={{ opacity: 1 }}
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Decorative corner element */}

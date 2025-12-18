@@ -1,26 +1,18 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { fetchProjects, type Project } from '@/lib/api';
 
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  image?: string;
-  technologies?: string[];
-  status: 'Completed' | 'In Progress' | 'Planned';
-  client?: string;
-  duration?: string;
-  team?: string;
-  outcome?: string;
-  metrics?: Array<{ label: string; value: string }>;
-  challenge?: string;
-  solution?: string;
-}
+// Map Strapi status values to display values
+const mapProjectStatus = (status: string): 'Completed' | 'In Progress' | 'Planned' => {
+  if (status === 'InProgress') return 'In Progress';
+  if (status === 'Completed') return 'Completed';
+  if (status === 'Planned') return 'Planned';
+  return 'Completed'; // Default fallback
+};
 
-const mockProjects: Project[] = [
+const mockProjects: any[] = [
   {
     id: '1',
     title: 'Enterprise Network Modernization',
@@ -142,13 +134,27 @@ const ProjectsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [expandedProject, setExpandedProject] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const categories = ['All', 'Network Infrastructure', 'Cloud Solutions', 'Digital Transformation', 'Cybersecurity', 'Data Analytics', 'IT Consulting'];
+  // Fetch projects from Strapi on component mount
+  useEffect(() => {
+    const loadProjects = async () => {
+      setLoading(true);
+      const data = await fetchProjects();
+      setProjects(data);
+      setLoading(false);
+    };
+    loadProjects();
+  }, []);
+
+  // Get unique categories from projects
+  const categories = ['All', ...Array.from(new Set(projects.map(p => p.category)))];
   const PROJECTS_PER_PAGE = 12;
 
   const filteredProjects = selectedCategory === 'All' 
-    ? mockProjects 
-    : mockProjects.filter(p => p.category === selectedCategory);
+    ? projects 
+    : projects.filter(p => p.category === selectedCategory);
 
   const totalPages = Math.ceil(filteredProjects.length / PROJECTS_PER_PAGE);
   const startIndex = (currentPage - 1) * PROJECTS_PER_PAGE;
@@ -284,7 +290,8 @@ const ProjectsPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-12">
           {currentProjects.map((project, index) => {
             const isExpanded = expandedProject === project.id;
-            const statusColors = getStatusColor(project.status);
+            const mappedStatus = mapProjectStatus(project.status);
+            const statusColors = getStatusColor(mappedStatus);
 
             return (
               <div
@@ -326,7 +333,7 @@ const ProjectsPage: React.FC = () => {
                         className="w-2 h-2 rounded-full animate-pulse"
                         style={{ backgroundColor: statusColors.text }}
                       />
-                      {project.status}
+                      {mappedStatus}
                     </span>
 
                     <div 

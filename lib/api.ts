@@ -1,6 +1,6 @@
-// API utility functions for fetching data
-// Note: These are placeholder implementations that will be replaced with actual API calls
-// once the backend is implemented
+// API utility functions for fetching data from Strapi CMS
+// Strapi API URL from environment variable
+const STRAPI_URL = process.env.NEXT_PUBLIC_CMS_URL || 'http://localhost:1337';
 
 export interface Service {
   id: string;
@@ -10,7 +10,7 @@ export interface Service {
   slug?: string;
   detailedDescription?: string;
   featuredImage?: string;
-  features?: string[];
+  features?: string[] | Array<{ title: string; description: string; icon: string }>;
   benefits?: string[];
   caseStudies?: CaseStudy[];
   relatedServices?: Service[];
@@ -30,9 +30,11 @@ export interface Article {
   title: string;
   excerpt: string;
   featuredImage?: string;
-  publishedAt: string;
+  publishedAt: string; // Note: In Strapi this is publicationDate
   category?: string;
   slug?: string;
+  content?: string;
+  author?: string;
 }
 
 export interface CaseExample {
@@ -64,7 +66,7 @@ export interface Industry {
   icon: string;
   slug?: string;
   featuredImage?: string;
-  caseExamples?: CaseExample[];
+  keyPoints?: string[];
   statistics?: Statistic[];
   testimonials?: Testimonial[];
   relatedServices?: Service[];
@@ -269,48 +271,107 @@ const mockLocations: Location[] = [
 // Simulate API delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export async function fetchServices(): Promise<Service[]> {
-  // TODO: Replace with actual API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services`);
-  // if (!response.ok) throw new Error('Failed to fetch services');
-  // return response.json();
+// Helper function to transform Strapi response format
+function transformStrapiData<T>(strapiData: any): T[] {
+  if (!strapiData || !Array.isArray(strapiData)) return [];
   
-  await delay(500); // Simulate network delay
-  return mockServices;
+  return strapiData.map((item: any) => ({
+    id: item.id?.toString() || item.documentId?.toString(),
+    ...item.attributes || item
+  }));
+}
+
+function transformStrapiSingleItem<T>(strapiItem: any): T | null {
+  if (!strapiItem) return null;
+  
+  return {
+    id: strapiItem.id?.toString() || strapiItem.documentId?.toString(),
+    ...strapiItem.attributes || strapiItem
+  } as T;
+}
+
+// Helper to get image URL from Strapi
+function getStrapiImageUrl(image: any): string | undefined {
+  if (!image) return undefined;
+  
+  const imageData = image.data || image;
+  if (!imageData) return undefined;
+  
+  const url = imageData.attributes?.url || imageData.url;
+  if (!url) return undefined;
+  
+  // If URL is relative, prepend Strapi URL
+  return url.startsWith('http') ? url : `${STRAPI_URL}${url}`;
+}
+
+export async function fetchServices(): Promise<Service[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/services?populate=*`);
+    
+    if (!response.ok) {
+      console.error('Failed to fetch services from Strapi:', response.statusText);
+      // Fallback to mock data if Strapi is unavailable
+      return mockServices;
+    }
+    
+    const json = await response.json();
+    const services = transformStrapiData<any>(json.data);
+    
+    // Transform Strapi data to match our interface
+    return services.map(service => ({
+      id: service.id,
+      title: service.Title || service.title, // Handle both Title and title
+      description: service.description,
+      icon: service.icon,
+      slug: service.slug,
+      detailedDescription: service.detailedDescription,
+      features: service.features,
+      benefits: service.benefits,
+      featuredImage: getStrapiImageUrl(service.featuredImage)
+    }));
+  } catch (error) {
+    console.error('Error fetching services:', error);
+    // Fallback to mock data on error
+    return mockServices;
+  }
 }
 
 export async function fetchServiceBySlug(slug: string): Promise<Service | null> {
-  // TODO: Replace with actual API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/services/${slug}`);
-  // if (!response.ok) {
-  //   if (response.status === 404) return null;
-  //   throw new Error('Failed to fetch service');
-  // }
-  // return response.json();
-  
-  await delay(500); // Simulate network delay
-  const service = mockServices.find(s => s.slug === slug);
-  if (!service) return null;
-  
-  // Return service with extended details
-  return {
-    ...service,
-    detailedDescription: `${service.description} Our comprehensive approach ensures that you receive tailored solutions that meet your specific business needs. We leverage cutting-edge technology and industry best practices to deliver exceptional results.`,
-    features: [
-      'Expert consultation and strategy development',
-      'Implementation and deployment support',
-      'Ongoing maintenance and optimization',
-      '24/7 technical support and monitoring'
-    ],
-    benefits: [
-      'Reduced operational costs',
-      'Improved efficiency and productivity',
-      'Enhanced security and compliance',
-      'Scalable solutions for future growth'
-    ],
-    caseStudies: mockCaseStudies.slice(0, 2),
-    relatedServices: mockServices.filter(s => s.id !== service.id).slice(0, 2)
-  };
+  try {
+    const response = await fetch(
+      `${STRAPI_URL}/api/services?filters[slug][$eq]=${slug}&populate=*`
+    );
+    
+    if (!response.ok) {
+      console.error('Failed to fetch service from Strapi:', response.statusText);
+      // Fallback to mock data
+      const service = mockServices.find(s => s.slug === slug);
+      if (!service) return null;
+      
+      return {
+        ...service,
+        detailedDescription: `${service.description} Our comprehensive approach ensures that you receive tailored solutions that meet your specific business needs.`,
+        features: ['Expert consultation', 'Implementation support', 'Ongoing maintenance', '24/7 support'],
+        benefits: ['Reduced costs', 'Improved efficiency', 'Enhanced security', 'Scalable solutions'],
+        caseStudies: mockCaseStudies.slice(0, 2),
+        relatedServices: mockServices.filter(s => s.id !== service.id).slice(0, 2)
+      };
+    }
+    
+    const json = await response.json();
+    if (!json.data || json.data.length === 0) return null;
+    
+    const service = transformStrapiSingleItem<Service>(json.data[0]);
+    if (!service) return null;
+    
+    return {
+      ...service,
+      featuredImage: getStrapiImageUrl((service as any).featuredImage)
+    };
+  } catch (error) {
+    console.error('Error fetching service by slug:', error);
+    return null;
+  }
 }
 
 export async function fetchCaseStudies(): Promise<CaseStudy[]> {
@@ -324,75 +385,109 @@ export async function fetchCaseStudies(): Promise<CaseStudy[]> {
 }
 
 export async function fetchLatestArticles(limit: number = 3): Promise<Article[]> {
-  // TODO: Replace with actual API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/insights?limit=${limit}&sort=publishedAt:desc`);
-  // if (!response.ok) throw new Error('Failed to fetch articles');
-  // return response.json();
-  
-  await delay(500); // Simulate network delay
-  return mockArticles.slice(0, limit);
+  try {
+    const response = await fetch(
+      `${STRAPI_URL}/api/articles?populate=*&sort=publicationDate:desc&pagination[limit]=${limit}`
+    );
+    
+    if (!response.ok) {
+      console.error('Failed to fetch articles from Strapi:', response.statusText);
+      return mockArticles.slice(0, limit);
+    }
+    
+    const json = await response.json();
+    const articles = transformStrapiData<Article>(json.data);
+    
+    // Transform Strapi data to match our interface
+    return articles.map(article => ({
+      ...article,
+      publishedAt: (article as any).publicationDate || article.publishedAt,
+      featuredImage: getStrapiImageUrl((article as any).featuredImage)
+    }));
+  } catch (error) {
+    console.error('Error fetching articles:', error);
+    return mockArticles.slice(0, limit);
+  }
 }
 
 export async function fetchIndustries(): Promise<Industry[]> {
-  // TODO: Replace with actual API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/industries`);
-  // if (!response.ok) throw new Error('Failed to fetch industries');
-  // return response.json();
-  
-  await delay(500); // Simulate network delay
-  return mockIndustries;
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/industries?populate=*`);
+    
+    if (!response.ok) {
+      console.error('Failed to fetch industries from Strapi:', response.statusText);
+      return mockIndustries;
+    }
+    
+    const json = await response.json();
+    const industries = transformStrapiData<any>(json.data);
+    
+    // Transform Strapi data to match our interface
+    return industries.map(industry => ({
+      id: industry.id,
+      name: industry.title, // Strapi uses 'title', we use 'name'
+      description: industry.description,
+      icon: industry.icon,
+      slug: industry.slug,
+      gradient: industry.gradient, // Pass through gradient from CMS
+      featuredImage: getStrapiImageUrl(industry.featuredImage),
+      statistics: industry.stats || [],
+      keyPoints: industry.keyPoints || []
+    }));
+  } catch (error) {
+    console.error('Error fetching industries:', error);
+    return mockIndustries;
+  }
 }
 
 export async function fetchIndustryBySlug(slug: string): Promise<Industry | null> {
-  // TODO: Replace with actual API call
-  // const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/industries/${slug}`);
-  // if (!response.ok) {
-  //   if (response.status === 404) return null;
-  //   throw new Error('Failed to fetch industry');
-  // }
-  // return response.json();
-  
-  await delay(500); // Simulate network delay
-  const industry = mockIndustries.find(i => i.slug === slug);
-  if (!industry) return null;
-  
-  // Return industry with extended details
-  return {
-    ...industry,
-    caseExamples: [
-      {
-        id: '1',
-        title: 'Digital Transformation Initiative',
-        description: 'Implemented comprehensive digital solutions to modernize operations',
-        outcome: 'Achieved 45% improvement in operational efficiency and 30% cost reduction',
-        metrics: '45% efficiency gain, 30% cost reduction'
-      },
-      {
-        id: '2',
-        title: 'Cloud Migration Project',
-        description: 'Migrated legacy systems to modern cloud infrastructure',
-        outcome: 'Reduced infrastructure costs by 40% while improving system reliability',
-        metrics: '40% cost savings, 99.9% uptime'
-      }
-    ],
-    statistics: [
-      { id: '1', label: 'Projects Completed', value: '150+' },
-      { id: '2', label: 'Client Satisfaction', value: '98%' },
-      { id: '3', label: 'Average ROI', value: '250%' },
-      { id: '4', label: 'Years of Experience', value: '15+' }
-    ],
-    testimonials: [
-      {
-        id: '1',
-        quote: 'Their expertise in our industry was evident from day one. They delivered solutions that exceeded our expectations.',
-        author: 'John Smith',
-        position: 'CTO',
-        company: 'Industry Leader Inc.'
-      }
-    ],
-    relatedServices: mockServices.slice(0, 3),
-    relatedArticles: mockArticles.slice(0, 2)
-  };
+  try {
+    const response = await fetch(
+      `${STRAPI_URL}/api/industries?filters[slug][$eq]=${slug}&populate=*`
+    );
+    
+    if (!response.ok) {
+      console.error('Failed to fetch industry from Strapi:', response.statusText);
+      // Fallback to mock data
+      const industry = mockIndustries.find(i => i.slug === slug);
+      if (!industry) return null;
+      
+      return {
+        ...industry,
+        keyPoints: [
+          'Digital Transformation Initiative',
+          'Cloud Infrastructure Management',
+          'Enterprise Security Solutions'
+        ],
+        statistics: [
+          { id: '1', label: 'Projects Completed', value: '150+' },
+          { id: '2', label: 'Client Satisfaction', value: '98%' }
+        ],
+        relatedServices: mockServices.slice(0, 3),
+        relatedArticles: mockArticles.slice(0, 2)
+      };
+    }
+    
+    const json = await response.json();
+    if (!json.data || json.data.length === 0) return null;
+    
+    const industry = json.data[0];
+    const attributes = industry.attributes || industry;
+    
+    return {
+      id: industry.id?.toString() || industry.documentId?.toString(),
+      name: attributes.title,
+      description: attributes.description,
+      icon: attributes.icon,
+      slug: attributes.slug,
+      featuredImage: getStrapiImageUrl(attributes.featuredImage),
+      statistics: attributes.stats || [],
+      keyPoints: attributes.keyPoints || []
+    };
+  } catch (error) {
+    console.error('Error fetching industry by slug:', error);
+    return null;
+  }
 }
 
 export async function fetchLocations(): Promise<Location[]> {
@@ -403,6 +498,58 @@ export async function fetchLocations(): Promise<Location[]> {
   
   await delay(500); // Simulate network delay
   return mockLocations;
+}
+
+export interface Project {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  projectStatus: 'Completed' | 'InProgress' | 'Planned';
+  client?: string;
+  duration?: string;
+  team?: string;
+  challenge?: string;
+  solution?: string;
+  outcome?: string;
+  technologies?: string[];
+  metrics?: Array<{ label: string; value: string }>;
+  image?: string;
+}
+
+export async function fetchProjects(): Promise<Project[]> {
+  try {
+    const response = await fetch(`${STRAPI_URL}/api/projects?populate=*`);
+    
+    if (!response.ok) {
+      console.error('Failed to fetch projects from Strapi:', response.statusText);
+      return [];
+    }
+    
+    const json = await response.json();
+    const projects = transformStrapiData<any>(json.data);
+    
+    // Transform Strapi data to match our interface
+    return projects.map(project => ({
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      category: project.category,
+      projectStatus: project.projectStatus,
+      client: project.client,
+      duration: project.duration,
+      team: project.team,
+      challenge: project.challenge,
+      solution: project.solution,
+      outcome: project.outcome,
+      technologies: project.technologies || [],
+      metrics: project.metrics || [],
+      image: getStrapiImageUrl(project.image)
+    }));
+  } catch (error) {
+    console.error('Error fetching projects:', error);
+    return [];
+  }
 }
 
 export async function submitContactForm(data: ContactFormData): Promise<ContactSubmissionResponse> {
@@ -436,4 +583,211 @@ export async function submitContactForm(data: ContactFormData): Promise<ContactS
     success: true,
     message: 'Thank you for contacting us. We will get back to you shortly.'
   };
+}
+
+// Hero Section Interface
+export interface HeroSection {
+  headline: string;
+  subtext: string;
+  ctaText: string;
+  ctaLink: string;
+  backgroundImage?: string;
+  stats?: Array<{ value: string; label: string }>;
+}
+
+// About Us Section Interface
+export interface AboutUsSection {
+  companyName: string;
+  mainDescription: string;
+  secondaryDescription?: string;
+  stats?: Array<{ value: string; label: string; icon: string; color: string }>;
+  values?: Array<{
+    icon: string;
+    title: string;
+    description: string;
+    features: string[];
+  }>;
+  achievements?: Array<{ title: string; description: string }>;
+}
+
+// Fetch Hero Section (Single Type)
+export async function fetchHeroSection(): Promise<HeroSection | null> {
+  try {
+    // Try new endpoint first (hero-section), then fallback to old (hero)
+    let response = await fetch(`${STRAPI_URL}/api/hero-section?populate=*`);
+    
+    if (!response.ok) {
+      console.log('Trying fallback endpoint /api/hero...');
+      response = await fetch(`${STRAPI_URL}/api/hero?populate=*`);
+    }
+    
+    if (!response.ok) {
+      console.error('Failed to fetch hero section from Strapi:', response.statusText);
+      console.log('Using fallback data. Please check:');
+      console.log('1. Strapi is running on http://localhost:1337');
+      console.log('2. Hero content type exists in Strapi');
+      console.log('3. API permissions are set (Settings → Roles → Public → Hero → find)');
+      // Return default hero data
+      return {
+        headline: 'Transforming Businesses Through Innovative ICT Solutions',
+        subtext: 'Partner with the ICT arm of PJ Lhuillier Group for comprehensive technology solutions that drive growth, efficiency, and digital transformation across your enterprise.',
+        ctaText: 'Get Started',
+        ctaLink: '#contact',
+        stats: [
+          { value: '15+', label: 'Years Experience' },
+          { value: '500+', label: 'Projects Delivered' },
+          { value: '98%', label: 'Client Satisfaction' },
+          { value: '24/7', label: 'Support Available' },
+        ]
+      };
+    }
+    
+    const json = await response.json();
+    console.log('Hero section fetched successfully from CMS');
+    const data = json.data?.attributes || json.data;
+    
+    if (!data) {
+      console.warn('No hero data found in response');
+      return null;
+    }
+    
+    return {
+      headline: data.headline,
+      subtext: data.subtext,
+      ctaText: data.ctaText,
+      ctaLink: data.ctaLink,
+      backgroundImage: getStrapiImageUrl(data.backgroundImage),
+      stats: data.stats || []
+    };
+  } catch (error) {
+    console.error('Error fetching hero section:', error);
+    // Return default hero data on error
+    return {
+      headline: 'Transforming Businesses Through Innovative ICT Solutions',
+      subtext: 'Partner with the ICT arm of PJ Lhuillier Group for comprehensive technology solutions that drive growth, efficiency, and digital transformation across your enterprise.',
+      ctaText: 'Get Started',
+      ctaLink: '#contact',
+      stats: [
+        { value: '15+', label: 'Years Experience' },
+        { value: '500+', label: 'Projects Delivered' },
+        { value: '98%', label: 'Client Satisfaction' },
+        { value: '24/7', label: 'Support Available' },
+      ]
+    };
+  }
+}
+
+// Fetch About Us Section (Single Type)
+export async function fetchAboutUsSection(): Promise<AboutUsSection | null> {
+  try {
+    // Try new endpoint first (about-us-section), then fallback to old (about-us)
+    let response = await fetch(`${STRAPI_URL}/api/about-us-section?populate=*`);
+    
+    if (!response.ok) {
+      console.log('Trying fallback endpoint /api/about-us...');
+      response = await fetch(`${STRAPI_URL}/api/about-us?populate=*`);
+    }
+    
+    if (!response.ok) {
+      console.error('Failed to fetch about us section from Strapi:', response.statusText);
+      console.log('Using fallback data. Please check:');
+      console.log('1. Strapi is running on http://localhost:1337');
+      console.log('2. About Us content type exists in Strapi');
+      console.log('3. API permissions are set (Settings → Roles → Public → About Us → find)');
+      // Return default about us data
+      return {
+        companyName: 'Networld Capital Ventures, Inc.',
+        mainDescription: "is the ICT arm of the PJ Lhuillier Group ('Cebuana Lhuillier') of Companies, offering a wide range of innovative ICT solutions that empower businesses to thrive in the digital age.",
+        secondaryDescription: 'With over 15 years of excellence, we combine deep industry expertise with cutting-edge technology to deliver transformative solutions that drive growth, efficiency, and competitive advantage.',
+        stats: [
+          { value: '15+', label: 'Years of Excellence', icon: '📅', color: '#8B1538' },
+          { value: '500+', label: 'Projects Delivered', icon: '🚀', color: '#2563EB' },
+          { value: '98%', label: 'Client Satisfaction', icon: '⭐', color: '#8B1538' },
+          { value: '24/7', label: 'Support Available', icon: '🛡️', color: '#2563EB' },
+        ],
+        values: [
+          {
+            icon: '🏢',
+            title: 'Part of PJ Lhuillier Group',
+            description: 'Backed by the trusted Cebuana Lhuillier brand with decades of proven excellence in serving Filipino communities',
+            features: ['Established Legacy', 'Trusted Brand', 'Financial Stability']
+          },
+          {
+            icon: '💻',
+            title: 'Comprehensive ICT Solutions',
+            description: 'End-to-end technology services from infrastructure to cloud, tailored to your unique business needs',
+            features: ['Full-Stack Services', 'Custom Solutions', 'Scalable Architecture']
+          },
+          {
+            icon: '🎯',
+            title: 'Innovation Focused',
+            description: 'Driving digital transformation and sustainable growth through cutting-edge technology and strategic partnerships',
+            features: ['Latest Technology', 'Future-Ready', 'Continuous Innovation']
+          },
+        ],
+        achievements: [
+          { title: 'Industry Leader', description: 'Recognized as a top ICT provider in the Philippines' },
+          { title: 'Certified Partners', description: 'Official partners with leading technology vendors' },
+          { title: 'Award Winning', description: 'Multiple industry awards for excellence and innovation' },
+        ]
+      };
+    }
+    
+    const json = await response.json();
+    console.log('About Us section fetched successfully from CMS');
+    const data = json.data?.attributes || json.data;
+    
+    if (!data) {
+      console.warn('No about us data found in response');
+      return null;
+    }
+    
+    return {
+      companyName: data.companyName,
+      mainDescription: data.mainDescription,
+      secondaryDescription: data.secondaryDescription,
+      stats: data.stats || [],
+      values: data.values || [],
+      achievements: data.achievements || []
+    };
+  } catch (error) {
+    console.error('Error fetching about us section:', error);
+    // Return default about us data on error
+    return {
+      companyName: 'Networld Capital Ventures, Inc.',
+      mainDescription: "is the ICT arm of the PJ Lhuillier Group ('Cebuana Lhuillier') of Companies, offering a wide range of innovative ICT solutions that empower businesses to thrive in the digital age.",
+      secondaryDescription: 'With over 15 years of excellence, we combine deep industry expertise with cutting-edge technology to deliver transformative solutions that drive growth, efficiency, and competitive advantage.',
+      stats: [
+        { value: '15+', label: 'Years of Excellence', icon: '📅', color: '#8B1538' },
+        { value: '500+', label: 'Projects Delivered', icon: '🚀', color: '#2563EB' },
+        { value: '98%', label: 'Client Satisfaction', icon: '⭐', color: '#8B1538' },
+        { value: '24/7', label: 'Support Available', icon: '🛡️', color: '#2563EB' },
+      ],
+      values: [
+        {
+          icon: '🏢',
+          title: 'Part of PJ Lhuillier Group',
+          description: 'Backed by the trusted Cebuana Lhuillier brand with decades of proven excellence in serving Filipino communities',
+          features: ['Established Legacy', 'Trusted Brand', 'Financial Stability']
+        },
+        {
+          icon: '💻',
+          title: 'Comprehensive ICT Solutions',
+          description: 'End-to-end technology services from infrastructure to cloud, tailored to your unique business needs',
+          features: ['Full-Stack Services', 'Custom Solutions', 'Scalable Architecture']
+        },
+        {
+          icon: '🎯',
+          title: 'Innovation Focused',
+          description: 'Driving digital transformation and sustainable growth through cutting-edge technology and strategic partnerships',
+          features: ['Latest Technology', 'Future-Ready', 'Continuous Innovation']
+        },
+      ],
+      achievements: [
+        { title: 'Industry Leader', description: 'Recognized as a top ICT provider in the Philippines' },
+        { title: 'Certified Partners', description: 'Official partners with leading technology vendors' },
+        { title: 'Award Winning', description: 'Multiple industry awards for excellence and innovation' },
+      ]
+    };
+  }
 }

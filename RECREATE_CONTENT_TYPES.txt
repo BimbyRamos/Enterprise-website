@@ -1,0 +1,337 @@
+      ========================================
+RECREATE STRAPI CONTENT TYPES FROM SCRATCH
+========================================
+
+This guide will help you recreate all 4 content types in Strapi UI.
+This should fix the 404 errors and make them appear in Permissions.
+
+========================================
+STEP 1: DELETE OLD CONTENT TYPES
+========================================
+
+1. Stop Strapi (Ctrl + C if running)
+
+2. Run the delete script:
+   Double-click: delete-content-types.bat
+
+   This will:
+   ✓ Delete all content type folders
+   ✓ Clean build cache
+   ✓ Prepare for fresh start
+
+3. Start Strapi:
+   cd strapi
+   npm run develop
+
+4. Wait for Strapi to start (http://localhost:1337/admin)
+
+========================================
+STEP 2: CREATE PROJECT CONTENT TYPE
+========================================
+
+1. Go to Content-Type Builder
+2. Click "Create new collection type"
+3. Display name: Project
+4. Click "Continue"
+
+Add these fields (click "Add another field" for each):
+
+□ Field 1: Text (Short text)
+   Name: title
+   ☑ Required field
+   Click "Finish"
+
+□ Field 2: Text (Long text)
+   Name: description
+   ☑ Required field
+   Click "Finish"
+
+□ Field 3: Text (Short text)
+   Name: category
+   ☑ Required field
+   Default value: Network Infrastructure
+   Click "Finish"
+
+□ Field 4: Enumeration
+   Name: projectStatus
+   Values (one per line):
+      Completed
+      InProgress
+      Planned
+   ☑ Required field
+   Click "Finish"
+   
+   NOTE: Don't use "status" - it's a reserved word in Strapi!
+
+□ Field 5: Text (Short text)
+   Name: client
+   Click "Finish"
+
+□ Field 6: Text (Short text)
+   Name: duration
+   Click "Finish"
+
+□ Field 7: Text (Short text)
+   Name: team
+   Click "Finish"
+
+□ Field 8: Text (Long text)
+   Name: challenge
+   Click "Finish"
+
+□ Field 9: Text (Long text)
+   Name: solution
+   Click "Finish"
+
+□ Field 10: Text (Long text)
+   Name: outcome
+   Click "Finish"
+
+□ Field 11: JSON
+   Name: technologies
+   Click "Finish"
+
+□ Field 12: JSON
+   Name: metrics
+   Click "Finish"
+
+□ Field 13: Media (Single media)
+   Name: image
+   Type: Single media
+   Allowed types: ☑ Images only
+   Click "Finish"
+
+5. Click "Save" (top right)
+6. Wait for Strapi to restart (this is important!)
+
+========================================
+STEP 3: CREATE SERVICE CONTENT TYPE
+========================================
+
+1. Click "Create new collection type"
+2. Display name: Service
+3. Click "Continue"
+
+Add these fields:
+
+□ Field 1: Text (Short text)
+   Name: title
+   ☑ Required field
+   Click "Finish"
+
+□ Field 2: UID
+   Name: slug
+   Attached field: title
+   ☑ Required field
+   Click "Finish"
+
+□ Field 3: Text (Long text)
+   Name: description
+   ☑ Required field
+   Click "Finish"
+
+□ Field 4: Text (Short text)
+   Name: icon
+   Click "Finish"
+
+□ Field 5: Rich text
+   Name: detailedDescription
+   Click "Finish"
+
+□ Field 6: Media (Single media)
+   Name: featuredImage
+   Type: Single media
+   Allowed types: ☑ Images only
+   Click "Finish"
+
+□ Field 7: JSON
+   Name: features
+   Click "Finish"
+
+□ Field 8: JSON
+   Name: benefits
+   Click "Finish"
+
+5. Click "Save" (top right)
+6. Wait for Strapi to restart
+
+========================================
+STEP 4: CREATE INDUSTRY CONTENT TYPE
+========================================
+
+1. Click "Create new collection type"
+2. Display name: Industry
+3. Click "Continue"
+
+Add these fields:
+
+□ Field 1: Text (Short text)
+   Name: title
+   ☑ Required field
+   Click "Finish"
+
+□ Field 2: UID
+   Name: slug
+   Attached field: title
+   ☑ Required field
+   Click "Finish"
+
+□ Field 3: Text (Long text)
+   Name: description
+   ☑ Required field
+   Click "Finish"
+
+□ Field 4: Text (Short text)
+   Name: icon
+   Click "Finish"
+
+□ Field 5: Text (Short text)
+   Name: gradient
+   Click "Finish"
+
+□ Field 6: JSON
+   Name: keyPoints
+   Click "Finish"
+
+□ Field 7: JSON
+   Name: stats
+   Click "Finish"
+
+□ Field 8: Media (Single media)
+   Name: featuredImage
+   Type: Single media
+   Allowed types: ☑ Images only
+   Click "Finish"
+
+5. Click "Save" (top right)
+6. Wait for Strapi to restart
+
+========================================
+STEP 5: CREATE ARTICLE CONTENT TYPE
+========================================
+
+1. Click "Create new collection type"
+2. Display name: Article
+3. Click "Continue"
+
+Add these fields:
+
+□ Field 1: Text (Short text)
+   Name: title
+   ☑ Required field
+   Click "Finish"
+
+□ Field 2: UID
+   Name: slug
+   Attached field: title
+   ☑ Required field
+   Click "Finish"
+
+□ Field 3: Text (Long text)
+   Name: excerpt
+   ☑ Required field
+   Click "Finish"
+
+□ Field 4: Rich text
+   Name: content
+   ☑ Required field
+   Click "Finish"
+
+□ Field 5: Text (Short text)
+   Name: category
+   Click "Finish"
+
+□ Field 6: Text (Short text)
+   Name: author
+   Click "Finish"
+
+□ Field 7: Media (Single media)
+   Name: featuredImage
+   Type: Single media
+   Allowed types: ☑ Images only
+   Click "Finish"
+
+□ Field 8: Date (datetime)
+   Name: publicationDate
+   Type: datetime
+   Click "Finish"
+   
+   NOTE: Don't use "publishedAt" - it's a reserved word in Strapi!
+
+5. Click "Save" (top right)
+6. Wait for Strapi to restart
+
+========================================
+STEP 6: SET PERMISSIONS
+========================================
+
+1. Go to Settings → Roles → Public
+
+2. Scroll down to Permissions section
+
+3. You should NOW see:
+   ✓ PROJECT
+   ✓ SERVICE
+   ✓ INDUSTRY
+   ✓ ARTICLE
+
+4. For each content type:
+   □ Expand "PROJECT" → Check ☑ find and ☑ findOne
+   □ Expand "SERVICE" → Check ☑ find and ☑ findOne
+   □ Expand "INDUSTRY" → Check ☑ find and ☑ findOne
+   □ Expand "ARTICLE" → Check ☑ find and ☑ findOne
+
+5. Click "Save" (top right)
+
+========================================
+STEP 7: TEST API ENDPOINTS
+========================================
+
+Open a NEW terminal (keep Strapi running) and run:
+
+   node test-strapi-api.js
+
+Expected result:
+   ✅ Projects       (200)
+   ✅ Services       (200)
+   ✅ Industries     (200)
+   ✅ Articles       (200)
+
+If you see 200 OK responses:
+   ✅ Task 3.1 Complete - Permissions configured
+   ✅ Task 3.2 Complete - API endpoints working
+   ✅ Ready for Task 4 - Add sample content
+
+========================================
+TROUBLESHOOTING
+========================================
+
+If content types still don't appear in Permissions:
+- Make sure you clicked "Save" after creating each content type
+- Make sure Strapi restarted after each save
+- Check Content-Type Builder to verify all 4 exist
+- Try stopping Strapi and running: npm run build
+
+If you get 404 errors:
+- The content types might not have been created properly
+- Check the Strapi terminal for error messages
+- Verify the folders exist in: strapi/src/api/
+
+If you get 403 errors:
+- Good! The API is working
+- Just need to set permissions (Step 6)
+
+========================================
+WHY THIS SHOULD WORK
+========================================
+
+Creating content types through the Strapi UI:
+✓ Automatically generates all required files
+✓ Automatically registers API routes
+✓ Automatically updates the database
+✓ Automatically rebuilds the admin panel
+✓ Forces Strapi to recognize the new content types
+
+This is more reliable than manually creating files!
+
+========================================

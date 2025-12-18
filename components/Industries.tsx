@@ -1,93 +1,70 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { fetchIndustries } from '@/lib/api';
+import type { Industry } from '@/lib/api';
 
-interface IndustryCategory {
-  id: string;
-  title: string;
-  icon: string;
-  gradient: string;
-  description: string;
-  keyPoints: string[];
-  stats?: { value: string; label: string }[];
+interface IndustryWithGradient extends Industry {
+  gradient?: string;
+  keyPoints?: string[];
+  stats?: Array<{ label: string; value: string }>;
+  title?: string;
 }
 
-const industriesData: IndustryCategory[] = [
-  {
-    id: 'pj-lhuillier',
-    title: 'PJ Lhuillier Group',
-    icon: '🏢',
-    gradient: 'linear-gradient(135deg, #8B1538 0%, #B91429 100%)',
-    description: 'Powering the technology backbone of one of the Philippines\' most trusted conglomerates, delivering innovative solutions across diverse business verticals',
-    keyPoints: [
-      'Integrated enterprise technology infrastructure',
-      'Multi-brand digital transformation initiatives',
-      'Centralized data management and analytics',
-      'Cross-business process optimization'
-    ],
-    stats: [
-      { value: '50+', label: 'Years of Trust' },
-      { value: 'Nationwide', label: 'Coverage' }
-    ]
-  },
-  {
-    id: 'financial-services',
-    title: 'Financial Services & FinTech',
-    icon: '💳',
-    gradient: 'linear-gradient(135deg, #2563EB 0%, #1E40AF 100%)',
-    description: 'Cutting-edge financial technology solutions enabling secure, compliant, and scalable digital financial services across the Philippines',
-    keyPoints: [
-      'Digital payment and remittance platforms',
-      'Pawnshop management systems',
-      'Foreign exchange and money transfer solutions',
-      'Mobile banking and digital wallet integration',
-      'Regulatory compliance and security frameworks'
-    ],
-    stats: [
-      { value: '24/7', label: 'Availability' },
-      { value: 'Bank-Grade', label: 'Security' }
-    ]
-  },
-  {
-    id: 'microfinance',
-    title: 'Microfinance Operations',
-    icon: '🤝',
-    gradient: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-    description: 'Empowering financial inclusion through technology-driven microfinance solutions that serve communities and drive economic growth',
-    keyPoints: [
-      'Loan origination and management systems',
-      'Credit scoring and risk assessment tools',
-      'Mobile-first customer engagement platforms',
-      'Agent network management technology',
-      'Portfolio monitoring and analytics'
-    ],
-    stats: [
-      { value: 'Inclusive', label: 'Access' },
-      { value: 'Scalable', label: 'Platform' }
-    ]
-  },
-  {
-    id: 'enterprise-systems',
-    title: 'Enterprise Systems',
-    icon: '⚙️',
-    gradient: 'linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%)',
-    description: 'Comprehensive enterprise solutions that streamline operations, enhance productivity, and drive digital transformation across organizations',
-    keyPoints: [
-      'ERP and business management systems',
-      'Workflow automation and digitization',
-      'Data analytics and business intelligence',
-      'Cloud infrastructure and integration',
-      'Cybersecurity and compliance management'
-    ],
-    stats: [
-      { value: 'Enterprise', label: 'Grade' },
-      { value: 'Integrated', label: 'Solutions' }
-    ]
-  }
-];
-
 const Industries: React.FC = () => {
+  const [industries, setIndustries] = useState<IndustryWithGradient[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetchIndustries()
+      .then((data) => {
+        // Transform data to include gradient and keyPoints from caseExamples
+        const transformedData = data.map((industry: any) => ({
+          ...industry,
+          title: industry.name, // Map name to title for consistency
+          gradient: industry.gradient || 'linear-gradient(135deg, #8B1538 0%, #B91429 100%)',
+          keyPoints: industry.caseExamples?.map((ex: any) => ex.title || ex.description) || [],
+          stats: industry.statistics?.slice(0, 2) || []
+        }));
+        setIndustries(transformedData);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching industries:', error);
+        setIsLoading(false);
+      });
+  }, []);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <section 
+        id="industries" 
+        className="relative py-24 px-4 overflow-hidden"
+        style={{
+          background: 'linear-gradient(180deg, #0F172A 0%, #1E293B 50%, #0F172A 100%)'
+        }}
+      >
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-20">
+            <div className="h-12 w-64 bg-white/10 animate-pulse rounded mx-auto mb-6" />
+            <div className="h-6 w-96 bg-white/10 animate-pulse rounded mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="bg-white/5 p-10 rounded-3xl border border-white/10">
+                <div className="w-20 h-20 bg-white/10 animate-pulse rounded-2xl mb-6" />
+                <div className="h-6 w-3/4 bg-white/10 animate-pulse rounded mb-4" />
+                <div className="h-4 w-full bg-white/10 animate-pulse rounded mb-2" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section 
@@ -168,22 +145,23 @@ const Industries: React.FC = () => {
 
         {/* Premium Industries Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {industriesData.map((industry, index) => {
+          {industries.map((industry, index) => {
             const isHovered = hoveredIndex === index;
             
             return (
-              <div
+              <Link
                 key={industry.id}
+                href={`/industries/${industry.slug || industry.id}`}
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
-                className="group relative"
+                className="group relative block"
                 style={{
                   animation: `fadeInUp 0.6s ease-out ${index * 0.15}s both`
                 }}
               >
                 {/* Card Container */}
                 <div 
-                  className="relative h-full rounded-3xl overflow-hidden transition-all duration-500 border border-white/10"
+                  className="relative h-full rounded-3xl overflow-hidden transition-all duration-500 border border-white/10 cursor-pointer"
                   style={{
                     background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%)',
                     backdropFilter: 'blur(10px)',
@@ -226,9 +204,9 @@ const Industries: React.FC = () => {
                       </div>
 
                       {/* Stats */}
-                      {industry.stats && (
+                      {industry.stats && industry.stats.length > 0 && (
                         <div className="flex gap-3">
-                          {industry.stats.map((stat, idx) => (
+                          {industry.stats.map((stat: any, idx: number) => (
                             <div 
                               key={idx}
                               className="text-right"
@@ -249,7 +227,7 @@ const Industries: React.FC = () => {
 
                     {/* Title */}
                     <h3 className="text-2xl md:text-3xl font-bold mb-4 text-white group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 group-hover:bg-clip-text transition-all duration-300">
-                      {industry.title}
+                      {industry.title || industry.name}
                     </h3>
 
                     {/* Description */}
@@ -258,27 +236,29 @@ const Industries: React.FC = () => {
                     </p>
 
                     {/* Key Points */}
-                    <div className="space-y-3">
-                      {industry.keyPoints.map((point, idx) => (
-                        <div 
-                          key={idx}
-                          className="flex items-start gap-3 transition-all duration-300"
-                          style={{
-                            opacity: isHovered ? 1 : 0.8,
-                            transform: isHovered ? 'translateX(0)' : 'translateX(-10px)',
-                            transitionDelay: `${idx * 50}ms`
-                          }}
-                        >
+                    {industry.keyPoints && industry.keyPoints.length > 0 && (
+                      <div className="space-y-3">
+                        {industry.keyPoints.slice(0, 5).map((point, idx) => (
                           <div 
-                            className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
-                            style={{ background: industry.gradient }}
-                          />
-                          <span className="text-sm text-gray-400 leading-relaxed">
-                            {point}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
+                            key={idx}
+                            className="flex items-start gap-3 transition-all duration-300"
+                            style={{
+                              opacity: isHovered ? 1 : 0.8,
+                              transform: isHovered ? 'translateX(0)' : 'translateX(-10px)',
+                              transitionDelay: `${idx * 50}ms`
+                            }}
+                          >
+                            <div 
+                              className="w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0"
+                              style={{ background: industry.gradient }}
+                            />
+                            <span className="text-sm text-gray-400 leading-relaxed">
+                              {point}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Bottom Shine Effect */}
@@ -289,7 +269,7 @@ const Industries: React.FC = () => {
                     }}
                   />
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>

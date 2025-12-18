@@ -1,0 +1,83 @@
+========================================
+✅ ERROR FIXED - Status Field
+========================================
+
+WHAT HAPPENED:
+You got this error when trying to create the "status" field:
+"This name cannot be used in your content type as it might break other functionalities"
+
+WHY:
+"status" is a RESERVED WORD in Strapi.
+
+THE FIX:
+Use "projectStatus" instead of "status"
+
+========================================
+CONTINUE CREATING PROJECT CONTENT TYPE
+========================================
+
+You were on Field 4. Here's what to do:
+
+□ Field 4: Enumeration
+   Name: projectStatus    ← Use this name!
+   Values (one per line):
+      Completed
+      InProgress
+      Planned
+   ☑ Required field
+   Click "Finish"
+
+Then continue with the remaining fields:
+
+□ Field 5: Text (Short text)
+   Name: client
+   Click "Finish"
+
+□ Field 6: Text (Short text)
+   Name: duration
+   Click "Finish"
+
+□ Field 7: Text (Short text)
+   Name: team
+   Click "Finish"
+
+□ Field 8: Text (Long text)
+   Name: challenge
+   Click "Finish"
+
+□ Field 9: Text (Long text)
+   Name: solution
+   Click "Finish"
+
+□ Field 10: Text (Long text)
+   Name: outcome
+   Click "Finish"
+
+□ Field 11: JSON
+   Name: technologies
+   Click "Finish"
+
+□ Field 12: JSON
+   Name: metrics
+   Click "Finish"
+
+□ Field 13: Media (Single media)
+   Name: image
+   Type: Single media
+   Allowed types: ☑ Images only
+   Click "Finish"
+
+Then click "Save" (top right) and wait for Strapi to restart!
+
+========================================
+AFTER PROJECT IS SAVED
+========================================
+
+Continue with the other 3 content types:
+- Service (8 fields)
+- Industry (8 fields)
+- Article (8 fields)
+
+Follow RECREATE_CONTENT_TYPES.txt for details!
+
+========================================

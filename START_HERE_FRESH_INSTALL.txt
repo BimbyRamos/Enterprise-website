@@ -1,0 +1,136 @@
+========================================
+START HERE - FRESH CONTENT TYPE INSTALL
+========================================
+
+You've tried rebuilding multiple times and it hasn't worked.
+Let's start completely fresh by deleting and recreating everything.
+
+========================================
+WHAT WE'RE GOING TO DO
+========================================
+
+1. Delete all existing content type files
+2. Clean Strapi's build cache
+3. Start Strapi fresh
+4. Recreate content types using Strapi UI (not files)
+5. Set permissions
+6. Test API endpoints
+
+This should take 15-20 minutes.
+
+========================================
+STEP-BY-STEP PROCESS
+========================================
+
+STEP 1: STOP STRAPI
+-------------------
+If Strapi is running, press Ctrl + C to stop it.
+
+
+STEP 2: DELETE OLD CONTENT TYPES
+---------------------------------
+Double-click this file:
+   delete-content-types.bat
+
+This will:
+✓ Delete project, service, industry, article folders
+✓ Clean build cache
+✓ Prepare for fresh start
+
+Press any key when prompted to continue.
+
+
+STEP 3: START STRAPI
+---------------------
+After the delete script finishes, run:
+   cd strapi
+   npm run develop
+
+Wait for Strapi to start.
+Open: http://localhost:1337/admin
+
+
+STEP 4: CREATE CONTENT TYPES IN UI
+-----------------------------------
+Now follow the detailed instructions in:
+   RECREATE_CONTENT_TYPES.txt
+
+Or use the quick checklist:
+   QUICK_RECREATE_CHECKLIST.txt
+
+Create all 4 content types:
+1. Project (13 fields)
+2. Service (8 fields)
+3. Industry (8 fields)
+4. Article (8 fields)
+
+IMPORTANT: Click "Save" and wait for restart after EACH one!
+
+
+STEP 5: SET PERMISSIONS
+------------------------
+Settings → Roles → Public
+
+You should NOW see all 4 content types in the Permissions section.
+
+Check find & findOne for:
+□ PROJECT
+□ SERVICE
+□ INDUSTRY
+□ ARTICLE
+
+Click "Save"
+
+
+STEP 6: TEST API
+----------------
+Open a NEW terminal (keep Strapi running):
+   node test-strapi-api.js
+
+Expected result:
+   ✅ Projects       (200)
+   ✅ Services       (200)
+   ✅ Industries     (200)
+   ✅ Articles       (200)
+
+========================================
+WHY THIS WILL WORK
+========================================
+
+Creating content types through Strapi UI instead of files:
+✓ Strapi automatically generates all required files
+✓ Strapi automatically registers API routes
+✓ Strapi automatically updates permissions system
+✓ Strapi automatically rebuilds admin panel
+✓ No manual file editing needed
+✓ No rebuild issues
+
+This is the OFFICIAL way to create content types!
+
+========================================
+FILES YOU NEED
+========================================
+
+1. delete-content-types.bat
+   → Deletes old content types
+
+2. RECREATE_CONTENT_TYPES.txt
+   → Detailed step-by-step guide
+
+3. QUICK_RECREATE_CHECKLIST.txt
+   → Quick reference checklist
+
+4. test-strapi-api.js
+   → Tests API endpoints
+
+========================================
+READY TO START?
+========================================
+
+1. Stop Strapi (Ctrl + C)
+2. Run: delete-content-types.bat
+3. Follow: RECREATE_CONTENT_TYPES.txt
+
+Good luck! This should fix the 404 errors.
+
+========================================

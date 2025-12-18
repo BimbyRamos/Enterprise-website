@@ -1,0 +1,118 @@
+═══════════════════════════════════════════════════════════════
+  HERO SECTION NOT SHOWING? HERE'S WHY AND HOW TO FIX IT
+═══════════════════════════════════════════════════════════════
+
+THE PROBLEM:
+━━━━━━━━━━━━
+You entered this in CMS:
+  ✏️ headline: "Empowering transformation in integrated techno"
+  ✏️ subtext: "Partner with the ICT arm of PJ Lhuillier Group..."
+
+But website shows:
+  ❌ headline: "Transforming Businesses Through Innovative ICT Solutions"
+  (This is the fallback/default content)
+
+WHY?
+━━━━━━━━━━━━
+After enabling "Draft & Publish" feature, Strapi has TWO buttons:
+
+  📝 SAVE button    = Saves as DRAFT (not visible to website)
+  ✅ PUBLISH button = Makes content LIVE (visible to website)
+
+You clicked SAVE, but you need to click PUBLISH!
+
+═══════════════════════════════════════════════════════════════
+  SOLUTION - 3 SIMPLE STEPS
+═══════════════════════════════════════════════════════════════
+
+STEP 1: REBUILD STRAPI (Required after schema changes)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Open Command Prompt and run:
+
+  cd strapi
+  npm run build
+  npm run develop
+
+⏱️ Wait for build to complete (1-2 minutes)
+
+
+STEP 2: PUBLISH YOUR CONTENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Open Strapi: http://localhost:1337/admin
+2. Go to: Content Manager → Single Types → Hero Section
+3. Look for the PUBLISH button (top right)
+4. Click: ✅ PUBLISH (not just Save)
+
+You should see a success message!
+
+
+STEP 3: REFRESH WEBSITE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Open website: http://localhost:3000
+2. Hard refresh: Ctrl + Shift + R
+3. ✨ Your new content should appear!
+
+═══════════════════════════════════════════════════════════════
+  UNDERSTANDING DRAFT & PUBLISH
+═══════════════════════════════════════════════════════════════
+
+BEFORE (draftAndPublish: false):
+  • Only "Save" button
+  • Content immediately visible on website
+  • No draft mode
+
+AFTER (draftAndPublish: true):
+  • "Save" button = Save as draft
+  • "Publish" button = Make live
+  • Can prepare content before going live
+  • Can unpublish content
+
+BENEFITS:
+  ✅ Prepare content without affecting live site
+  ✅ Review before publishing
+  ✅ Schedule content updates
+  ✅ Unpublish if needed
+
+═══════════════════════════════════════════════════════════════
+  TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+IF STILL NOT WORKING:
+
+1. Check API Permissions:
+   Settings → Roles → Public → Hero → Check "find" ✅
+
+2. Test API directly:
+   Run: test-hero-api.bat
+   Or visit: http://localhost:1337/api/hero?populate=*
+   Should see your content in JSON
+
+3. Check browser console (F12):
+   Look for any red errors
+
+4. Verify Strapi is running:
+   Should see: "Server started on http://localhost:1337"
+
+5. Clear Next.js cache:
+   Stop website → Delete .next folder → Restart
+
+═══════════════════════════════════════════════════════════════
+  QUICK TEST
+═══════════════════════════════════════════════════════════════
+
+Run this to test the API:
+  test-hero-api.bat
+
+Expected output should include:
+  "headline": "Empowering transformation in integrated techno"
+
+If you see this, the API works! Just refresh your website.
+
+═══════════════════════════════════════════════════════════════
+
+SUMMARY:
+  1. Rebuild Strapi (cd strapi, npm run build, npm run develop)
+  2. Click PUBLISH in Strapi admin (not just Save)
+  3. Hard refresh website (Ctrl + Shift + R)
+
+That's it! 🎉

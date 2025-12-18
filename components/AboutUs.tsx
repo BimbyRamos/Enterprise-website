@@ -1,43 +1,39 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { fetchAboutUsSection, type AboutUsSection } from '@/lib/api';
 
 const AboutUs: React.FC = () => {
-  const stats = [
-    { value: '15+', label: 'Years of Excellence', icon: '📅', color: '#8B1538' },
-    { value: '500+', label: 'Projects Delivered', icon: '🚀', color: '#2563EB' },
-    { value: '98%', label: 'Client Satisfaction', icon: '⭐', color: '#8B1538' },
-    { value: '24/7', label: 'Support Available', icon: '🛡️', color: '#2563EB' },
-  ];
+  const [aboutData, setAboutData] = useState<AboutUsSection | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const values = [
-    {
-      icon: '🏢',
-      title: 'Part of PJ Lhuillier Group',
-      description: 'Backed by the trusted Cebuana Lhuillier brand with decades of proven excellence in serving Filipino communities',
-      features: ['Established Legacy', 'Trusted Brand', 'Financial Stability']
-    },
-    {
-      icon: '💻',
-      title: 'Comprehensive ICT Solutions',
-      description: 'End-to-end technology services from infrastructure to cloud, tailored to your unique business needs',
-      features: ['Full-Stack Services', 'Custom Solutions', 'Scalable Architecture']
-    },
-    {
-      icon: '🎯',
-      title: 'Innovation Focused',
-      description: 'Driving digital transformation and sustainable growth through cutting-edge technology and strategic partnerships',
-      features: ['Latest Technology', 'Future-Ready', 'Continuous Innovation']
-    },
-  ];
+  useEffect(() => {
+    fetchAboutUsSection()
+      .then((data) => {
+        setAboutData(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching about us section:', error);
+        setIsLoading(false);
+      });
+  }, []);
 
+  // Loading state
+  if (isLoading || !aboutData) {
+    return (
+      <section className="relative py-20 md:py-28 px-4" style={{ background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFC 50%, #FFFFFF 100%)' }}>
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <div className="h-12 w-64 bg-gray-200 animate-pulse rounded mx-auto mb-6" />
+            <div className="h-6 w-96 bg-gray-200 animate-pulse rounded mx-auto" />
+          </div>
+        </div>
+      </section>
+    );
+  }
 
-
-  const achievements = [
-    { title: 'Industry Leader', description: 'Recognized as a top ICT provider in the Philippines' },
-    { title: 'Certified Partners', description: 'Official partners with leading technology vendors' },
-    { title: 'Award Winning', description: 'Multiple industry awards for excellence and innovation' },
-  ];
+  const { companyName, mainDescription, secondaryDescription, stats, values, achievements } = aboutData;
 
   return (
     <section 
@@ -162,7 +158,7 @@ const AboutUs: React.FC = () => {
                     letterSpacing: '-0.02em'
                   }}
                 >
-                  Networld Capital Ventures, Inc.
+                  {companyName}
                 </h3>
               </div>
 
@@ -171,33 +167,29 @@ const AboutUs: React.FC = () => {
                 <p 
                   className="text-lg md:text-xl leading-relaxed text-center"
                   style={{ color: '#475569' }}
-                >
-                  is the <span className="font-bold" style={{ color: '#8B1538' }}>ICT arm</span> of the{' '}
-                  <span className="font-bold" style={{ color: '#0F172A' }}>PJ Lhuillier Group</span>{' '}
-                  <span className="text-base" style={{ color: '#64748B' }}>('Cebuana Lhuillier')</span> of Companies, 
-                  offering a wide range of innovative ICT solutions that empower businesses to thrive in the digital age.
-                </p>
-
-                <div 
-                  className="w-16 h-1 mx-auto rounded-full"
-                  style={{ background: 'linear-gradient(90deg, #8B1538 0%, #2563EB 100%)' }}
+                  dangerouslySetInnerHTML={{ __html: mainDescription }}
                 />
 
-                <p 
-                  className="text-base md:text-lg leading-relaxed text-center"
-                  style={{ color: '#64748B' }}
-                >
-                  With over <span className="font-bold" style={{ color: '#8B1538' }}>15 years of excellence</span>, 
-                  we combine deep industry expertise with cutting-edge technology to deliver transformative solutions 
-                  that drive <span className="font-semibold" style={{ color: '#0F172A' }}>growth</span>, 
-                  <span className="font-semibold" style={{ color: '#0F172A' }}> efficiency</span>, and 
-                  <span className="font-semibold" style={{ color: '#0F172A' }}> competitive advantage</span>.
-                </p>
+                {secondaryDescription && (
+                  <>
+                    <div 
+                      className="w-16 h-1 mx-auto rounded-full"
+                      style={{ background: 'linear-gradient(90deg, #8B1538 0%, #2563EB 100%)' }}
+                    />
+
+                    <p 
+                      className="text-base md:text-lg leading-relaxed text-center"
+                      style={{ color: '#64748B' }}
+                      dangerouslySetInnerHTML={{ __html: secondaryDescription }}
+                    />
+                  </>
+                )}
               </div>
 
               {/* Achievement Badges */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10 max-w-4xl mx-auto">
-                {achievements.map((achievement, index) => (
+              {achievements && achievements.length > 0 && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-10 max-w-4xl mx-auto">
+                  {achievements.map((achievement, index) => (
                   <div
                     key={index}
                     className="relative p-4 rounded-xl text-center group cursor-pointer"
@@ -223,15 +215,17 @@ const AboutUs: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Premium Stats Section with Glass Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-20 max-w-6xl mx-auto">
-          {stats.map((stat, index) => (
+        {stats && stats.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-20 max-w-6xl mx-auto">
+            {stats.map((stat, index) => (
             <div
               key={index}
               className="group relative rounded-2xl overflow-hidden cursor-pointer"
@@ -299,12 +293,14 @@ const AboutUs: React.FC = () => {
                 }} 
               />
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Premium Core Values Grid with Enhanced Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-20 max-w-6xl mx-auto">
-          {values.map((value, index) => (
+        {values && values.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-20 max-w-6xl mx-auto">
+            {values.map((value, index) => (
             <div
               key={index}
               className="group relative rounded-2xl overflow-hidden cursor-pointer"
@@ -404,10 +400,9 @@ const AboutUs: React.FC = () => {
                 }}
               />
             </div>
-          ))}
-        </div>
-
-
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Enhanced keyframe animations */}

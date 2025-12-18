@@ -195,9 +195,24 @@ export default function ServiceDetailPage() {
                 <h2 className="text-3xl md:text-4xl font-bold text-neutral-900 mb-6 tracking-tight">
                   Transform Your Business
                 </h2>
-                <p className="text-lg md:text-xl text-neutral-600 leading-relaxed">
-                  {service.detailedDescription}
-                </p>
+                <div className="text-lg md:text-xl text-neutral-600 leading-relaxed space-y-4">
+                  {service.detailedDescription && typeof service.detailedDescription === 'string' ? (
+                    <p>{service.detailedDescription}</p>
+                  ) : service.detailedDescription && Array.isArray(service.detailedDescription) ? (
+                    service.detailedDescription.map((block: any, index: number) => {
+                      if (block.type === 'paragraph') {
+                        return (
+                          <p key={index}>
+                            {block.children?.map((child: any, childIndex: number) => child.text).join('')}
+                          </p>
+                        );
+                      }
+                      return null;
+                    })
+                  ) : (
+                    <p>{service.description}</p>
+                  )}
+                </div>
               </div>
 
               {/* Features */}

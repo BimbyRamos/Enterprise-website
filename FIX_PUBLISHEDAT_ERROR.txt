@@ -1,0 +1,89 @@
+========================================
+FIX: "publishedAt" Field Name Error
+========================================
+
+ERROR MESSAGE:
+"This name cannot be used in your content type as it might break other functionalities"
+
+PROBLEM:
+"publishedAt" is a RESERVED WORD in Strapi - it's automatically created by Strapi's draft/publish system.
+
+SOLUTION:
+Use "publicationDate" instead of "publishedAt"
+
+========================================
+UPDATED ARTICLE CONTENT TYPE - FIELD 8
+========================================
+
+WRONG:
+□ Field 8: Date (datetime)
+   Name: publishedAt ← RESERVED WORD!
+
+CORRECT:
+□ Field 8: Date (datetime)
+   Name: publicationDate ← Use this instead!
+   Type: datetime
+   Click "Finish"
+
+========================================
+COMPLETE ARTICLE FIELDS (CORRECTED)
+========================================
+
+□ Field 1: Text (Short text)
+   Name: title
+   ☑ Required field
+
+□ Field 2: UID
+   Name: slug
+   Attached field: title ← Don't forget!
+   ☑ Required field
+
+□ Field 3: Text (Long text)
+   Name: excerpt
+   ☑ Required field
+
+□ Field 4: Rich text
+   Name: content
+   ☑ Required field
+
+□ Field 5: Text (Short text)
+   Name: category
+
+□ Field 6: Text (Short text)
+   Name: author
+
+□ Field 7: Media (Single media)
+   Name: featuredImage
+   Type: Single media
+   Allowed types: ☑ Images only
+
+□ Field 8: Date (datetime)
+   Name: publicationDate ← CHANGED!
+   Type: datetime
+
+Then click "Save" and wait for restart!
+
+========================================
+WHY THIS HAPPENS
+========================================
+
+Strapi automatically creates these fields:
+- id
+- createdAt
+- updatedAt
+- publishedAt ← This one!
+- createdBy
+- updatedBy
+
+You can't create fields with these names because Strapi already uses them internally!
+
+========================================
+CONTINUE WITH ARTICLE
+========================================
+
+1. Change Field 8 name from "publishedAt" to "publicationDate"
+2. Complete all 8 fields
+3. Click "Save"
+4. Wait for Strapi to restart
+
+========================================

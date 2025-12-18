@@ -1,0 +1,72 @@
+========================================
+QUICK FIX - "An error occurred" when saving
+========================================
+
+TRY THESE IN ORDER:
+
+1. CHECK THE SLUG FIELD
+   When you created the "slug" field, did you set:
+   - Attached field: title ← THIS IS REQUIRED!
+   
+   If you forgot this, the save will fail.
+   
+   FIX: Cancel and recreate Industry with slug properly configured
+
+
+2. WAIT AND TRY AGAIN
+   Sometimes Strapi is still processing.
+   
+   FIX: Wait 30 seconds, then click "Save" again
+
+
+3. CHECK FOR DUPLICATE FIELD NAMES
+   Make sure you don't have two fields with the same name.
+   
+   FIX: Review all 8 fields, remove any duplicates
+
+
+4. RESTART STRAPI
+   Strapi might be in a bad state.
+   
+   FIX:
+   - Stop Strapi (Ctrl + C)
+   - cd strapi
+   - npm run develop
+   - Try creating Industry again
+
+
+5. CHECK STRAPI TERMINAL
+   Look for red error messages in the terminal.
+   
+   Common errors:
+   - "Duplicate field" → Remove duplicate field
+   - "Invalid UID" → Fix slug field configuration
+   - "Database error" → Restart Strapi
+
+========================================
+MOST COMMON ISSUE: SLUG FIELD
+========================================
+
+The slug field MUST have "Attached field" set!
+
+✅ CORRECT:
+   Type: UID
+   Name: slug
+   Attached field: title ← MUST BE SET!
+   Required: ☑
+
+❌ WRONG:
+   Type: UID
+   Name: slug
+   Attached field: (empty) ← This causes error!
+
+========================================
+WHAT TO DO NOW
+========================================
+
+1. Look at the Strapi terminal - any red errors?
+2. If yes, tell me what the error says
+3. If no specific error, try restarting Strapi
+4. Then recreate Industry content type
+
+========================================

@@ -1,0 +1,67 @@
+========================================
+QUICK CHECKLIST - RECREATE CONTENT TYPES
+========================================
+
+□ STEP 1: Delete old content types
+   - Stop Strapi (Ctrl + C)
+   - Run: delete-content-types.bat
+   - Start Strapi: cd strapi && npm run develop
+
+□ STEP 2: Create PROJECT (13 fields)
+   title, description, category, projectStatus, client, 
+   duration, team, challenge, solution, outcome, 
+   technologies, metrics, image
+   Click "Save" → Wait for restart
+   
+   ⚠️ Use "projectStatus" NOT "status" (reserved word!)
+
+□ STEP 3: Create SERVICE (8 fields)
+   title, slug, description, icon, detailedDescription,
+   featuredImage, features, benefits
+   Click "Save" → Wait for restart
+
+□ STEP 4: Create INDUSTRY (8 fields)
+   title, slug, description, icon, gradient,
+   keyPoints, stats, featuredImage
+   Click "Save" → Wait for restart
+
+□ STEP 5: Create ARTICLE (8 fields)
+   title, slug, excerpt, content, category,
+   author, featuredImage, publicationDate
+   Click "Save" → Wait for restart
+   
+   ⚠️ Use "publicationDate" NOT "publishedAt" (reserved word!)
+
+□ STEP 6: Set Permissions
+   Settings → Roles → Public
+   Check find & findOne for all 4 content types
+   Click "Save"
+
+□ STEP 7: Test API
+   node test-strapi-api.js
+   Should get 200 OK for all 4 endpoints
+
+========================================
+FIELD TYPES QUICK REFERENCE
+========================================
+
+Text (Short text) = string
+Text (Long text) = text
+Rich text = richtext
+UID = uid (attached to title)
+Enumeration = enum (list values)
+JSON = json
+Media (Single) = media (images only)
+Date (datetime) = datetime
+
+========================================
+IMPORTANT NOTES
+========================================
+
+✓ Click "Save" after EACH content type
+✓ Wait for Strapi to restart after EACH save
+✓ Don't skip the restart - it's critical!
+✓ Check Content-Type Builder to verify they exist
+✓ Then check Permissions page - they should appear
+
+========================================

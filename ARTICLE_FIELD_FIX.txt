@@ -1,0 +1,60 @@
+========================================
+✅ ARTICLE CONTENT TYPE - FIELD FIX
+========================================
+
+ERROR:
+"publishedAt" cannot be used - it's a reserved word!
+
+FIX:
+Use "publicationDate" instead
+
+========================================
+CORRECTED ARTICLE FIELDS
+========================================
+
+□ Field 1: Text (Short text)
+   Name: title
+   ☑ Required
+
+□ Field 2: UID
+   Name: slug
+   Attached field: title ← Important!
+   ☑ Required
+
+□ Field 3: Text (Long text)
+   Name: excerpt
+   ☑ Required
+
+□ Field 4: Rich text
+   Name: content
+   ☑ Required
+
+□ Field 5: Text (Short text)
+   Name: category
+
+□ Field 6: Text (Short text)
+   Name: author
+
+□ Field 7: Media (Single media)
+   Name: featuredImage
+   Allowed types: ☑ Images only
+
+□ Field 8: Date (datetime)
+   Name: publicationDate ← USE THIS!
+   Type: datetime
+
+Then click "Save"!
+
+========================================
+RESERVED WORDS SUMMARY
+========================================
+
+For Project:
+❌ status → ✅ projectStatus
+
+For Article:
+❌ publishedAt → ✅ publicationDate
+
+These are automatically created by Strapi!
+
+========================================

@@ -27,6 +27,8 @@ This plan focuses on connecting your existing Next.js website to Strapi CMS and 
 
 
 
+
+
   - [x] 2.1 Create Project content type
 
     - Go to Content-Type Builder → Create new collection type → "Project"
@@ -46,8 +48,9 @@ This plan focuses on connecting your existing Next.js website to Strapi CMS and 
     - Click "Save" and wait for Strapi to restart
     - _Requirements: 12.5_
 
+  - [x] 2.2 Create Service content type
 
-  - [ ] 2.2 Create Service content type
+
     - Go to Content-Type Builder → Create new collection type → "Service"
     - Add field: title (Text, Short, Required)
     - Add field: slug (UID, Attached to: title, Required)
@@ -60,8 +63,9 @@ This plan focuses on connecting your existing Next.js website to Strapi CMS and 
     - Click "Save" and wait for Strapi to restart
     - _Requirements: 12.5_
 
+  - [x] 2.3 Create Industry content type
 
-  - [ ] 2.3 Create Industry content type
+
     - Go to Content-Type Builder → Create new collection type → "Industry"
     - Add field: title (Text, Short, Required)
     - Add field: slug (UID, Attached to: title, Required)
@@ -72,10 +76,11 @@ This plan focuses on connecting your existing Next.js website to Strapi CMS and 
     - Add field: stats (JSON)
     - Add field: featuredImage (Media, Single image)
     - Click "Save" and wait for Strapi to restart
-
     - _Requirements: 12.5_
 
-  - [ ] 2.4 Create Article content type
+  - [x] 2.4 Create Article content type
+
+
     - Go to Content-Type Builder → Create new collection type → "Article"
     - Add field: title (Text, Short, Required)
     - Add field: slug (UID, Attached to: title, Required)
@@ -88,30 +93,17 @@ This plan focuses on connecting your existing Next.js website to Strapi CMS and 
     - Click "Save" and wait for Strapi to restart
     - _Requirements: 12.5_
 
-- [x] 3. Configure Strapi API permissions
-
-
-
-
-
-
-  - [x] 3.1 Set public permissions
-
-
-
-
+- [ ] 3. Configure Strapi API permissions
+  - [ ] 3.1 Set public permissions
     - Go to Settings → Users & Permissions Plugin → Roles → Public
     - Expand "Project" and check: find, findOne
     - Expand "Service" and check: find, findOne
     - Expand "Industry" and check: find, findOne
     - Expand "Article" and check: find, findOne
     - Click "Save"
-
     - _Requirements: 12.1, 14.1_
 
-  - [x] 3.2 Test API endpoints
-
-
+  - [ ] 3.2 Test API endpoints
     - Open browser and test: http://localhost:1337/api/projects
     - Test: http://localhost:1337/api/services
     - Test: http://localhost:1337/api/industries
@@ -530,3 +522,4 @@ This plan focuses on connecting your existing Next.js website to Strapi CMS and 
 - **Estimated Time**: 2-3 days for full implementation
 - **Priority**: Focus on core content types (Projects, Services, Industries) first
 - **Optional**: Articles/Insights and Careers pages can be added later
+

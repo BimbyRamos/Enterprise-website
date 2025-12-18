@@ -1,5 +1,6 @@
 ╔══════════════════════════════════════════════════════════════╗
 ║           STRAPI CMS - QUICK START GUIDE                     ║
+║         Networld Capital Ventures Enterprise Website         ║
 ╚══════════════════════════════════════════════════════════════╝
 
 🎉 CONGRATULATIONS! Strapi is running at:
@@ -13,25 +14,66 @@ STEP 1: CREATE CONTENT TYPES (5 minutes)
 ────────────────────────────────────────
 1. Click "Content-Type Builder" (left sidebar)
 2. Click "Create new collection type"
-3. Create these types:
-   
-   ✓ Service
-     Fields: title, slug, description, icon, featured_image, 
-             features (JSON), benefits (JSON)
+3. Create these types for your website:
    
    ✓ Project
-     Fields: title, slug, description, client, year, 
-             technologies (JSON), images, featured, category
+     Fields:
+     - title (Text, required)
+     - description (Text, long text, required)
+     - category (Text, required)
+       Default value: "Network Infrastructure"
+       Note: Use one of these categories:
+       "Network Infrastructure", "Cloud Solutions", 
+       "Digital Transformation", "Cybersecurity",
+       "Data Analytics", "IT Consulting"
+     - status (Enumeration, required)
+       Values: Completed, InProgress, Planned
+     - client (Text)
+     - duration (Text) - e.g., "6 months"
+     - team (Text) - e.g., "12 specialists"
+     - challenge (Text, long text)
+     - solution (Text, long text)
+     - outcome (Text, long text)
+     - technologies (JSON) - Array of strings
+       Example: ["SD-WAN", "Cisco", "Fortinet"]
+     - metrics (JSON) - Array of objects
+       Example: [{"label": "Uptime", "value": "99.9%"}]
+     - testimonial (Component - create separately)
+       Fields: quote, author, position
+     - image (Media, single)
+   
+   ✓ Service
+     Fields:
+     - title (Text, required)
+     - slug (UID, attached to title)
+     - description (Text, long text, required)
+     - icon (Text) - Emoji or icon code
+     - detailedDescription (Rich text)
+     - featuredImage (Media, single)
+     - features (JSON) - Array of strings
+     - benefits (JSON) - Array of strings
    
    ✓ Industry
-     Fields: name, slug, description, icon, image
+     Fields:
+     - title (Text, required)
+     - slug (UID, attached to title)
+     - description (Text, long text, required)
+     - icon (Text) - Emoji or icon code
+     - gradient (Text) - CSS gradient string
+     - keyPoints (JSON) - Array of strings
+     - stats (JSON) - Array of objects
+       Example: [{"value": "24/7", "label": "Availability"}]
    
-   ✓ Team Member
-     Fields: name, position, bio, photo, email, linkedin
-   
-   ✓ Blog Post
-     Fields: title, slug, excerpt, content, author, 
-             featured_image, category, published_date
+   ✓ Article (Blog/Insights)
+     Fields:
+     - title (Text, required)
+     - slug (UID, attached to title)
+     - excerpt (Text, long text, required)
+     - content (Rich text, required)
+     - featuredImage (Media, single)
+     - category (Text)
+     - publishedAt (DateTime)
+     - author (Text)
 
 4. Click "Save" after each (Strapi will restart)
 
@@ -39,48 +81,102 @@ STEP 1: CREATE CONTENT TYPES (5 minutes)
 
 STEP 2: ADD SAMPLE CONTENT (10 minutes)
 ────────────────────────────────────────
-1. Click "Content Manager" (left sidebar)
-2. Select "Service"
-3. Click "Create new entry"
-4. Fill in:
-   - Title: "Enterprise Architecture Consultancy"
-   - Description: Your service description
-   - Icon: 🏛️
-   - Features: Copy from guide
-   - Benefits: Copy from guide
-5. Click "Save" then "Publish"
-6. Repeat for 3-5 services
 
-Do the same for Projects, Industries, etc.
+📁 PROJECTS (Add 3-6 featured projects)
+────────────────────────────────────────
+1. Click "Content Manager" → "Project"
+2. Click "Create new entry"
+3. Example Project:
+   - Title: "Enterprise Network Modernization"
+   - Description: "Complete overhaul of legacy network infrastructure..."
+   - Category: "Network Infrastructure"
+   - Status: "Completed"
+   - Client: "Major Financial Institution"
+   - Duration: "6 months"
+   - Team: "12 specialists"
+   - Technologies: ["SD-WAN", "Cisco", "Fortinet"]
+   - Metrics: [
+       {"label": "Uptime", "value": "99.9%"},
+       {"label": "Cost Reduction", "value": "35%"}
+     ]
+4. Click "Save" then "Publish"
+5. Repeat for more projects
+
+📁 SERVICES (Add 8 core services)
+────────────────────────────────────────
+Current Services on Website:
+1. Enterprise Architecture Consultancy (🏛️)
+2. Business Consultancy (💼)
+3. Platform Development Factory (🏭)
+4. Platform Management (Buy & Manage) (🛠️)
+5. Platform Management (AI Build) (🤖)
+6. Managed Cloud & Infrastructure (☁️)
+7. ICT Managed Services (🔧)
+8. Operations & Maintenance (⚙️)
+
+Example Entry:
+   - Title: "Enterprise Architecture Consultancy"
+   - Slug: "enterprise-architecture-consultancy"
+   - Description: "We help organizations design and implement..."
+   - Icon: "🏛️"
+   - Features: ["Expert consultation", "Implementation support"]
+   - Benefits: ["Reduced costs", "Improved efficiency"]
+
+📁 INDUSTRIES (Add 4 key industries)
+────────────────────────────────────────
+Current Industries on Website:
+1. PJ Lhuillier Group (🏢)
+2. Financial Services & FinTech (💳)
+3. Microfinance Operations (🤝)
+4. Enterprise Systems (⚙️)
+
+Example Entry:
+   - Title: "Financial Services & FinTech"
+   - Slug: "financial-services-fintech"
+   - Description: "Cutting-edge financial technology solutions..."
+   - Icon: "💳"
+   - Gradient: "linear-gradient(135deg, #2563EB 0%, #1E40AF 100%)"
+   - Key Points: ["Digital payment platforms", "Security frameworks"]
+   - Stats: [{"value": "24/7", "label": "Availability"}]
+
+📁 ARTICLES (Optional - for Insights section)
+────────────────────────────────────────
+Add blog posts and insights as needed
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-STEP 3: SET API PERMISSIONS (2 minutes)
+STEP 3: SET API PERMISSIONS (2 minutes) ⚠️ IMPORTANT!
 ────────────────────────────────────────
 1. Click "Settings" (left sidebar)
 2. Click "Users & Permissions Plugin" → "Roles"
 3. Click "Public"
-4. For each content type, check:
-   ✓ find
-   ✓ findOne
+4. For EACH content type (Project, Service, Industry, Article):
+   ✓ find (allows listing all items)
+   ✓ findOne (allows viewing single item)
 5. Click "Save"
 
-Now your website can access the content!
+⚠️ Without this step, your website CANNOT access the content!
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 STEP 4: TEST YOUR API (1 minute)
 ────────────────────────────────────────
-Open browser and visit:
+Open browser and visit these endpoints:
+
+✓ Projects:
+   http://localhost:1337/api/projects
+
+✓ Services:
    http://localhost:1337/api/services
 
-You should see JSON data with your services!
-
-Other endpoints:
-   http://localhost:1337/api/projects
+✓ Industries:
    http://localhost:1337/api/industries
-   http://localhost:1337/api/team-members
-   http://localhost:1337/api/blog-posts
+
+✓ Articles:
+   http://localhost:1337/api/articles
+
+You should see JSON data with your content!
+If you see "Forbidden", go back to Step 3 and set permissions.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -90,78 +186,200 @@ Other endpoints:
 2. Click "Add new assets"
 3. Drag & drop your images
 4. Click "Upload"
+5. Use uploaded images in your content entries
 
-Recommended sizes:
-- Services: 800x600px
-- Projects: 1200x800px
-- Team photos: 400x400px
-- Blog images: 1200x630px
+Recommended sizes for your website:
+- Project images: 1200x800px (16:9 ratio)
+- Service featured images: 800x600px (4:3 ratio)
+- Industry images: 1200x800px (16:9 ratio)
+- Article featured images: 1200x630px (OG image size)
+
+Supported formats: JPG, PNG, WebP, SVG
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🔄 DAILY USAGE:
 ────────────────────────────────────────
-ADD CONTENT:
-  Content Manager → Select type → Create new entry
-  → Fill fields → Save → Publish
+ADD NEW CONTENT:
+  1. Content Manager → Select type (Project/Service/Industry)
+  2. Click "Create new entry"
+  3. Fill in all required fields (marked with *)
+  4. Click "Save" (saves as draft)
+  5. Click "Publish" (makes it live on website)
 
-EDIT CONTENT:
-  Content Manager → Select type → Click entry
-  → Make changes → Save → Publish
+EDIT EXISTING CONTENT:
+  1. Content Manager → Select type
+  2. Click on the entry you want to edit
+  3. Make your changes
+  4. Click "Save" then "Publish"
 
 DELETE CONTENT:
-  Open entry → Click "..." → Delete → Confirm
+  1. Open the entry
+  2. Click "..." (three dots) → Delete
+  3. Confirm deletion
+
+UNPUBLISH CONTENT (hide without deleting):
+  1. Open the entry
+  2. Click "Unpublish"
+  3. Content is saved but not visible on website
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🎯 WHAT YOU CAN MANAGE:
+🎯 WHAT YOU CAN MANAGE IN YOUR WEBSITE:
 ────────────────────────────────────────
-✓ Services & Products
-✓ Projects & Case Studies
-✓ Industries & Sectors
-✓ Team Members
-✓ Blog Posts & News
-✓ Images & Media Files
-✓ All website content!
+✓ PROJECTS - Featured projects displayed on homepage and /projects page
+  - Currently showing 3 featured projects on homepage
+  - All 6 projects visible on dedicated projects page
+  - Includes metrics, testimonials, and case details
+
+✓ SERVICES - 8 core ICT services offered by NCVI
+  - Enterprise Architecture Consultancy
+  - Business Consultancy
+  - Platform Development & Management
+  - Cloud & Infrastructure Services
+  - Managed Services & Operations
+
+✓ INDUSTRIES - 4 key industry sectors served
+  - PJ Lhuillier Group
+  - Financial Services & FinTech
+  - Microfinance Operations
+  - Enterprise Systems
+
+✓ ARTICLES - Blog posts and insights (optional)
+  - Technology trends and updates
+  - Case studies and success stories
+  - Industry news and announcements
+
+✓ MEDIA - All images and files used across the website
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 💡 PRO TIPS:
 ────────────────────────────────────────
 • Save without publishing to work on drafts
-• Use "Duplicate" to copy similar content
-• Search bar helps find content quickly
-• Ctrl+S to save, Ctrl+P to publish
-• Always click "Publish" to make content live!
+• Use "Duplicate" button to copy similar content (saves time!)
+• Use search bar to find content quickly
+• Keyboard shortcuts: Ctrl+S to save, Ctrl+P to publish
+• Always click "Publish" to make content live on website!
+• Use JSON fields for arrays - format: ["item1", "item2", "item3"]
+• For metrics, use: [{"label": "Name", "value": "99%"}]
+• Preview your changes on the website after publishing
+• Keep slugs URL-friendly (lowercase, hyphens, no spaces)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🚀 STARTING/STOPPING STRAPI:
 ────────────────────────────────────────
-START:
+START STRAPI (Option 1 - Easiest):
+  Double-click: setup-strapi.bat
+
+START STRAPI (Option 2 - Manual):
+  Open terminal:
   cd strapi
   npm run develop
 
-STOP:
-  Press Ctrl + C in terminal
+STOP STRAPI:
+  Press Ctrl + C in the terminal window
 
-ACCESS:
+ACCESS ADMIN PANEL:
   http://localhost:1337/admin
+
+VIEW API:
+  http://localhost:1337/api/projects
+  http://localhost:1337/api/services
+  http://localhost:1337/api/industries
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+� CONNEMCTING WEBSITE TO STRAPI:
+────────────────────────────────────────
+Your Next.js website is configured to fetch content from Strapi.
+
+Current Setup:
+- Website: http://localhost:3000
+- Strapi API: http://localhost:1337/api
+- API calls are in: lib/api.ts
+
+Once you add content to Strapi and publish it:
+1. The website will automatically fetch it
+2. Refresh your website to see new content
+3. No code changes needed!
+
+Note: Currently using mock data. To switch to Strapi:
+- Update lib/api.ts to use real API calls
+- Ensure Strapi is running when viewing website
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️ TROUBLESHOOTING: Can't Save Content Type?
+────────────────────────────────────────
+If you get an error when clicking "Save" after creating fields:
+
+COMMON CAUSES:
+1. Enumeration values with spaces or special characters
+2. Field names using reserved words (id, createdAt, etc.)
+3. Too many fields added at once
+4. Database connection issues
+
+QUICK FIXES:
+
+✓ For Enumeration Fields (Status, Category):
+  - Use single words: "Completed", "InProgress", "Planned"
+  - NO spaces: ❌ "In Progress" → ✅ "InProgress"
+  - NO special chars: ❌ "Web Dev 2.0" → ✅ "WebDevelopment"
+  - Alternative: Use Text field instead of Enumeration
+
+✓ For Field Names:
+  - Use camelCase: featuredImage, publishedAt
+  - Avoid: id, createdAt, updatedAt (reserved)
+  - No special characters or spaces
+
+✓ If Still Failing:
+  1. Check terminal for error messages
+  2. Add fields ONE AT A TIME
+  3. Click "Save" after each field
+  4. Restart Strapi: Ctrl+C, then npm run develop
+  5. Clear browser cache (Ctrl+Shift+Delete)
+  6. Try incognito mode
+
+✓ For JSON Fields:
+  1. Click "Add another field"
+  2. Select "JSON" (not Text)
+  3. Name it: technologies, metrics, features, etc.
+  4. Click "Finish"
+  5. Click "Save"
+  
+  When adding content, use proper JSON format:
+  - Array: ["item1", "item2", "item3"]
+  - Objects: [{"label": "Name", "value": "99%"}]
+  - Use double quotes, not single quotes
+  - No trailing commas
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📚 NEED MORE HELP?
 ────────────────────────────────────────
-Read the full guide: STRAPI_USER_GUIDE.md
-Strapi Docs: https://docs.strapi.io
-Ask me for help anytime!
+Full guide: STRAPI_USER_GUIDE.md
+Strapi Documentation: https://docs.strapi.io
+CMS & Hosting Guide: CMS_AND_HOSTING_GUIDE.md
+
+Common Issues:
+- Can't access admin? Make sure Strapi is running
+- API returns "Forbidden"? Check Step 3 (API Permissions)
+- Content not showing? Make sure it's published, not just saved
+- Can't save content type? See troubleshooting section above
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✅ YOU'RE READY TO GO!
 
-Start by creating your first content type, then add some content.
-Your website will automatically fetch and display it!
+Follow the 4 steps above to set up your CMS:
+1. Create content types (5 min)
+2. Add sample content (10 min)
+3. Set API permissions (2 min) ⚠️ IMPORTANT!
+4. Test your API (1 min)
+
+Your website will automatically fetch and display the content!
 
 Happy content managing! 🎉
 

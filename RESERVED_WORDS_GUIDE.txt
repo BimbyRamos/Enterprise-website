@@ -1,0 +1,63 @@
+========================================
+STRAPI RESERVED WORDS - AVOID THESE!
+========================================
+
+When creating content type fields, DO NOT use these names:
+
+❌ RESERVED WORDS (Will cause errors):
+   - status          → Use: projectStatus, orderStatus, etc.
+   - id              → Automatically created by Strapi
+   - createdAt       → Automatically created by Strapi
+   - updatedAt       → Automatically created by Strapi
+   - publishedAt     → Automatically created by Strapi
+   - createdBy       → Automatically created by Strapi
+   - updatedBy       → Automatically created by Strapi
+   - locale          → Used by i18n plugin
+   - localizations   → Used by i18n plugin
+
+========================================
+SAFE ALTERNATIVES
+========================================
+
+Instead of:          Use:
+-----------          ----
+status          →    projectStatus, orderStatus, taskStatus
+id              →    externalId, referenceId, customId
+publishedAt     →    publicationDate, releaseDate, launchDate
+
+========================================
+FOR YOUR PROJECT CONTENT TYPE
+========================================
+
+✅ CORRECT:
+   Field Name: projectStatus
+   Type: Enumeration
+   Values: Completed, InProgress, Planned
+
+❌ WRONG:
+   Field Name: status
+   (This will show the error you saw!)
+
+========================================
+WHY THESE ARE RESERVED
+========================================
+
+Strapi uses these field names internally for:
+- Database operations (id, createdAt, updatedAt)
+- Publishing workflow (publishedAt, status)
+- User tracking (createdBy, updatedBy)
+- Internationalization (locale, localizations)
+
+Using them would conflict with Strapi's core functionality!
+
+========================================
+QUICK CHECK
+========================================
+
+Before creating a field, ask yourself:
+"Does Strapi already use this name for something?"
+
+If yes → Add a prefix or be more specific
+If no → You're good to go!
+
+========================================

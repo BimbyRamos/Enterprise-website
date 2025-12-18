@@ -1,23 +1,39 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from './Button';
+import { fetchHeroSection, type HeroSection } from '@/lib/api';
 
-export interface HeroProps {
-  headline: string;
-  subtext: string;
-  ctaText: string;
-  ctaLink: string;
-  backgroundImage?: string;
-}
+const Hero: React.FC = () => {
+  const [heroData, setHeroData] = useState<HeroSection | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-const Hero: React.FC<HeroProps> = ({
-  headline,
-  subtext,
-  ctaText,
-  ctaLink,
-  backgroundImage,
-}) => {
+  useEffect(() => {
+    fetchHeroSection()
+      .then((data) => {
+        setHeroData(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching hero section:', error);
+        setIsLoading(false);
+      });
+  }, []);
+
+  // Loading state
+  if (isLoading || !heroData) {
+    return (
+      <section className="relative min-h-[85vh] flex items-center justify-center px-4 py-16 md:py-24">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-secondary-900" />
+        <div className="relative z-10 max-w-6xl mx-auto text-center">
+          <div className="h-12 w-3/4 bg-white/10 animate-pulse rounded mx-auto mb-6" />
+          <div className="h-6 w-1/2 bg-white/10 animate-pulse rounded mx-auto" />
+        </div>
+      </section>
+    );
+  }
+
+  const { headline, subtext, ctaText, ctaLink, backgroundImage, stats } = heroData;
   return (
     <section
       className="relative min-h-[85vh] flex items-center justify-center px-4 py-16 md:py-24 overflow-hidden"
@@ -106,21 +122,8 @@ const Hero: React.FC<HeroProps> = ({
             variant="secondary"
             size="lg"
             onClick={() => {
-              if (ctaLink.startsWith('#')) {
-                const targetId = ctaLink.substring(1);
-                const targetElement = document.getElementById(targetId);
-                if (targetElement) {
-                  const headerOffset = 80;
-                  const elementPosition = targetElement.getBoundingClientRect().top;
-                  const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-                  window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                  });
-                }
-              } else {
-                window.location.href = ctaLink;
-              }
+              // Navigate to Contact page
+              window.location.href = '/contact';
             }}
             className="shadow-premium hover:shadow-glow hover:scale-[1.02] transition-all duration-300 min-w-[200px]"
           >
@@ -157,13 +160,9 @@ const Hero: React.FC<HeroProps> = ({
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mt-16">
-          {[
-            { value: '15+', label: 'Years Experience' },
-            { value: '500+', label: 'Projects Delivered' },
-            { value: '98%', label: 'Client Satisfaction' },
-            { value: '24/7', label: 'Support Available' },
-          ].map((stat, index) => (
+        {stats && stats.length > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mt-16">
+            {stats.map((stat, index) => (
             <div key={index} className="text-center">
               <div 
                 className="text-2xl md:text-3xl font-bold mb-1"
@@ -178,8 +177,9 @@ const Hero: React.FC<HeroProps> = ({
                 {stat.label}
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Scroll indicator */}

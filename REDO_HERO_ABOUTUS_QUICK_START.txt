@@ -1,0 +1,210 @@
+═══════════════════════════════════════════════════════════════
+  QUICK START: MANUALLY CREATE HERO & ABOUT US IN STRAPI
+═══════════════════════════════════════════════════════════════
+
+STEP 1: DELETE OLD CONTENT TYPES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Run this command:
+  delete-hero-aboutus.bat
+
+Press any key when prompted.
+
+
+STEP 2: REBUILD STRAPI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+cd strapi
+npm run build
+npm run develop
+
+⏱️ Wait for "Server started on http://localhost:1337"
+
+
+STEP 3: CREATE HERO SECTION IN STRAPI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Open: http://localhost:1337/admin
+2. Go to: Content-Type Builder
+3. Click: "Create new single type"
+4. Display name: Hero Section
+5. Click: Continue
+
+Add these fields (click "Add another field" for each):
+
+  📝 Field 1: headline
+     Type: Text (short text)
+     Name: headline
+     Advanced Settings → Check: Required field ✅
+     Click: Finish
+
+  📝 Field 2: subtext
+     Type: Text (long text)
+     Name: subtext
+     Advanced Settings → Check: Required field ✅
+     Click: Finish
+
+  📝 Field 3: ctaText
+     Type: Text (short text)
+     Name: ctaText
+     Default value: Get Started
+     Advanced Settings → Check: Required field ✅
+     Click: Finish
+
+  📝 Field 4: ctaLink
+     Type: Text (short text)
+     Name: ctaLink
+     Default value: #contact
+     Advanced Settings → Check: Required field ✅
+     Click: Finish
+
+  🖼️ Field 5: backgroundImage
+     Type: Media (single media)
+     Name: backgroundImage
+     Allowed types: Images only
+     Click: Finish
+
+  📊 Field 6: stats
+     Type: JSON
+     Name: stats
+     Click: Finish
+
+6. Click: SAVE (top right)
+7. ⏱️ Wait for Strapi to restart
+
+
+STEP 4: CREATE ABOUT US SECTION IN STRAPI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. In Content-Type Builder, click: "Create new single type"
+2. Display name: About Us Section
+3. Click: Continue
+
+Add these fields:
+
+  📝 Field 1: companyName
+     Type: Text (short text)
+     Name: companyName
+     Advanced Settings → Check: Required field ✅
+     Click: Finish
+
+  📝 Field 2: mainDescription
+     Type: Text (long text)
+     Name: mainDescription
+     Advanced Settings → Check: Required field ✅
+     Click: Finish
+
+  📝 Field 3: secondaryDescription
+     Type: Text (long text)
+     Name: secondaryDescription
+     Click: Finish
+
+  📊 Field 4: stats
+     Type: JSON
+     Name: stats
+     Click: Finish
+
+  📊 Field 5: values
+     Type: JSON
+     Name: values
+     Click: Finish
+
+  📊 Field 6: achievements
+     Type: JSON
+     Name: achievements
+     Click: Finish
+
+4. Click: SAVE (top right)
+5. ⏱️ Wait for Strapi to restart
+
+
+STEP 5: SET API PERMISSIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Go to: Settings → Roles → Public
+2. Find: Hero-section
+3. Check: ✅ find
+4. Find: About-us-section
+5. Check: ✅ find
+6. Click: SAVE
+
+
+STEP 6: ADD HERO CONTENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Go to: Content Manager → Single Types → Hero Section
+2. Fill in:
+
+   headline:
+   Empowering transformation in integrated techno
+
+   subtext:
+   Partner with the ICT arm of PJ Lhuillier Group for comprehensive technology solutions that drive growth, efficiency, and digital transformation across your enterprise.
+
+   ctaText:
+   Get Started
+
+   ctaLink:
+   #contact
+
+   stats (paste this JSON):
+   [{"value":"15+","label":"Years Experience"},{"value":"500+","label":"Projects Delivered"},{"value":"98%","label":"Client Satisfaction"},{"value":"24/7","label":"Support Available"}]
+
+3. Click: SAVE
+
+
+STEP 7: ADD ABOUT US CONTENT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Go to: Content Manager → Single Types → About Us Section
+2. Fill in:
+
+   companyName:
+   Networld Capital Ventures, Inc.
+
+   mainDescription:
+   is the ICT arm of the PJ Lhuillier Group ('Cebuana Lhuillier') of Companies, offering a wide range of innovative ICT solutions that empower businesses to thrive in the digital age.
+
+   secondaryDescription:
+   With over 15 years of excellence, we combine deep industry expertise with cutting-edge technology to deliver transformative solutions that drive growth, efficiency, and competitive advantage.
+
+   stats (paste this JSON):
+   [{"value":"15+","label":"Years of Excellence","icon":"📅","color":"#8B1538"},{"value":"500+","label":"Projects Delivered","icon":"🚀","color":"#2563EB"},{"value":"98%","label":"Client Satisfaction","icon":"⭐","color":"#8B1538"},{"value":"24/7","label":"Support Available","icon":"🛡️","color":"#2563EB"}]
+
+   values (paste this JSON):
+   [{"icon":"🏢","title":"Part of PJ Lhuillier Group","description":"Backed by the trusted Cebuana Lhuillier brand with decades of proven excellence in serving Filipino communities","features":["Established Legacy","Trusted Brand","Financial Stability"]},{"icon":"💻","title":"Comprehensive ICT Solutions","description":"End-to-end technology services from infrastructure to cloud, tailored to your unique business needs","features":["Full-Stack Services","Custom Solutions","Scalable Architecture"]},{"icon":"🎯","title":"Innovation Focused","description":"Driving digital transformation and sustainable growth through cutting-edge technology and strategic partnerships","features":["Latest Technology","Future-Ready","Continuous Innovation"]}]
+
+   achievements (paste this JSON):
+   [{"title":"Industry Leader","description":"Recognized as a top ICT provider in the Philippines"},{"title":"Certified Partners","description":"Official partners with leading technology vendors"},{"title":"Award Winning","description":"Multiple industry awards for excellence and innovation"}]
+
+3. Click: SAVE
+
+
+STEP 8: TEST THE API
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Open these URLs in your browser:
+
+  Hero: http://localhost:1337/api/hero-section?populate=*
+  About Us: http://localhost:1337/api/about-us-section?populate=*
+
+You should see your content in JSON format!
+
+
+STEP 9: REFRESH WEBSITE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. Open: http://localhost:3000
+2. Press: Ctrl + Shift + R (hard refresh)
+3. ✨ Your content should now appear!
+
+Check the browser console (F12) for helpful log messages.
+
+═══════════════════════════════════════════════════════════════
+
+WHAT I CHANGED:
+  ✅ Updated API to try both endpoints (hero-section and hero)
+  ✅ Added helpful console logs to debug issues
+  ✅ Removed draft/publish to simplify workflow
+  ✅ Created scripts to delete old content types
+
+BENEFITS:
+  ✅ No draft/publish confusion
+  ✅ Changes are immediate
+  ✅ Full control over field setup
+  ✅ Fresh start eliminates old issues
+
+═══════════════════════════════════════════════════════════════
+
+For detailed instructions, see: MANUAL_HERO_ABOUTUS_SETUP.md

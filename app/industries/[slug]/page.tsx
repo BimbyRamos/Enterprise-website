@@ -105,32 +105,49 @@ export default function IndustryDetailPage() {
       {/* Hero Section */}
       <section className="py-16 px-4 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-6">
-            <div 
-              className="w-20 h-20 flex items-center justify-center rounded-xl shadow-md"
-              style={{
-                background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.15) 0%, rgba(37, 99, 235, 0.15) 100%)'
-              }}
-            >
-              <span className="text-4xl" role="img" aria-label={`${industry.name} icon`}>
-                {industry.icon}
-              </span>
-            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column - Content */}
             <div>
-              <h1 
-                className="text-4xl md:text-5xl font-bold"
-                style={{ color: '#0F172A' }}
+              <div className="flex items-center gap-4 mb-6">
+                <div 
+                  className="w-20 h-20 flex items-center justify-center rounded-xl shadow-md"
+                  style={{
+                    background: 'linear-gradient(135deg, rgba(139, 21, 56, 0.15) 0%, rgba(37, 99, 235, 0.15) 100%)'
+                  }}
+                >
+                  <span className="text-4xl" role="img" aria-label={`${industry.name} icon`}>
+                    {industry.icon}
+                  </span>
+                </div>
+                <div>
+                  <h1 
+                    className="text-4xl md:text-5xl font-bold"
+                    style={{ color: '#0F172A' }}
+                  >
+                    {industry.name}
+                  </h1>
+                </div>
+              </div>
+              <p 
+                className="text-xl"
+                style={{ color: '#475569' }}
               >
-                {industry.name}
-              </h1>
+                {industry.description}
+              </p>
             </div>
+
+            {/* Right Column - Featured Image */}
+            {industry.featuredImage && (
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src={industry.featuredImage} 
+                  alt={industry.name}
+                  className="w-full h-auto object-cover"
+                  style={{ maxHeight: '500px' }}
+                />
+              </div>
+            )}
           </div>
-          <p 
-            className="text-xl max-w-3xl"
-            style={{ color: '#475569' }}
-          >
-            {industry.description}
-          </p>
         </div>
       </section>
 
@@ -176,72 +193,47 @@ export default function IndustryDetailPage() {
                 </div>
               )}
 
-              {/* Case Examples */}
-              {industry.caseExamples && industry.caseExamples.length > 0 && (
+              {/* Key Points */}
+              {industry.keyPoints && industry.keyPoints.length > 0 && (
                 <div>
                   <h2 
                     className="text-2xl font-bold mb-6"
                     style={{ color: '#0F172A' }}
                   >
-                    Success Stories
+                    Key Capabilities
                   </h2>
-                  <div className="space-y-6">
-                    {industry.caseExamples.map((caseExample) => (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {industry.keyPoints.map((point, index) => (
                       <div 
-                        key={caseExample.id}
-                        className="p-6 rounded-xl border border-gray-200 bg-white hover:shadow-md transition-shadow"
+                        key={index}
+                        className="flex items-start gap-3 p-4 rounded-xl border border-gray-200 bg-white hover:shadow-md transition-shadow"
                       >
-                        <h3 
-                          className="text-xl font-bold mb-3"
-                          style={{ color: '#0F172A' }}
-                        >
-                          {caseExample.title}
-                        </h3>
-                        <p 
-                          className="text-base mb-4"
-                          style={{ color: '#475569' }}
-                        >
-                          {caseExample.description}
-                        </p>
                         <div 
-                          className="p-4 rounded-lg mb-3"
+                          className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg"
                           style={{
-                            backgroundColor: 'rgba(139, 21, 56, 0.05)'
+                            backgroundColor: 'rgba(139, 21, 56, 0.1)'
                           }}
                         >
-                          <div 
-                            className="text-sm font-semibold mb-1"
-                            style={{ color: '#8B1538' }}
+                          <svg 
+                            className="w-5 h-5" 
+                            fill="none" 
+                            stroke="#8B1538" 
+                            viewBox="0 0 24 24"
                           >
-                            Outcome
-                          </div>
-                          <p 
-                            className="text-base"
-                            style={{ color: '#0F172A' }}
-                          >
-                            {caseExample.outcome}
-                          </p>
+                            <path 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round" 
+                              strokeWidth={2} 
+                              d="M5 13l4 4L19 7" 
+                            />
+                          </svg>
                         </div>
-                        {caseExample.metrics && (
-                          <div className="flex items-center gap-2 text-sm">
-                            <svg 
-                              className="w-5 h-5" 
-                              fill="none" 
-                              stroke="#8B1538" 
-                              viewBox="0 0 24 24"
-                            >
-                              <path 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                                strokeWidth={2} 
-                                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" 
-                              />
-                            </svg>
-                            <span style={{ color: '#475569' }}>
-                              {caseExample.metrics}
-                            </span>
-                          </div>
-                        )}
+                        <p 
+                          className="text-base flex-1"
+                          style={{ color: '#0F172A' }}
+                        >
+                          {point}
+                        </p>
                       </div>
                     ))}
                   </div>

@@ -9,6 +9,9 @@ export interface Service {
   description: string;
   icon: string;
   slug?: string;
+  detailedDescription?: string;
+  features?: string[] | Array<{ title: string; description: string; icon: string }>;
+  benefits?: string[];
 }
 
 export interface FeaturedServicesProps {
@@ -122,8 +125,39 @@ const FeaturedServices: React.FC<FeaturedServicesProps> = ({ services, isLoading
   }
 
   const currentService = services[selectedService];
-  const currentSlug = currentService?.slug || 'cloud-solutions';
-  const details = serviceDetails[currentSlug] || serviceDetails['cloud-solutions'];
+  const currentSlug = currentService?.slug || 'enterprise-architecture-consultancy';
+  
+  // Use CMS data if available, otherwise fall back to hardcoded details
+  const cmsDetails = currentService ? {
+    tagline: currentService.description || 'Comprehensive ICT solutions for your business',
+    benefits: currentService.benefits || [],
+    features: currentService.features || []
+  } : null;
+  
+  const details = cmsDetails || serviceDetails[currentSlug] || {
+    tagline: 'Comprehensive ICT solutions for your business',
+    benefits: ['Expert Consultation', 'Tailored Solutions', 'Proven Results', 'Ongoing Support'],
+    features: [
+      { title: 'Consultation', description: 'Expert guidance', icon: '💡' },
+      { title: 'Implementation', description: 'Seamless delivery', icon: '🚀' },
+      { title: 'Support', description: '24/7 assistance', icon: '🛟' },
+      { title: 'Optimization', description: 'Continuous improvement', icon: '📈' }
+    ]
+  };
+  
+  // Convert features to proper format if they're strings
+  const formattedFeatures = Array.isArray(details.features) 
+    ? details.features.map((feature, index) => {
+        if (typeof feature === 'string') {
+          return {
+            title: feature,
+            description: feature,
+            icon: ['💡', '🚀', '🛟', '📈', '⚡', '🔧', '📊', '🎯'][index % 8]
+          };
+        }
+        return feature;
+      })
+    : [];
 
   return (
     <section 
@@ -343,9 +377,6 @@ const FeaturedServices: React.FC<FeaturedServicesProps> = ({ services, isLoading
                   <h3 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: '#0F172A' }}>
                     {currentService.title}
                   </h3>
-                  <p className="text-lg text-gray-600 leading-relaxed mb-4">
-                    {details.tagline}
-                  </p>
                   <p className="text-base text-gray-600 leading-relaxed">
                     {currentService.description}
                   </p>
@@ -390,7 +421,7 @@ const FeaturedServices: React.FC<FeaturedServicesProps> = ({ services, isLoading
                   Core Features
                 </h4>
                 <div className="grid grid-cols-2 gap-4">
-                  {details.features.map((feature, index) => (
+                  {formattedFeatures.map((feature, index) => (
                     <div 
                       key={index}
                       className="p-4 rounded-2xl transition-all duration-300 hover:scale-105 cursor-pointer"

@@ -1,0 +1,120 @@
+========================================
+STRAPI REBUILD - FIX 404 ERRORS
+========================================
+
+THE PROBLEM:
+✗ Content types exist in Content-Type Builder
+✗ Content types exist in file system
+✗ BUT they don't appear in Permissions page
+✗ API endpoints return 404 errors
+
+THE SOLUTION:
+Rebuild Strapi to register the API routes
+
+========================================
+STEP-BY-STEP INSTRUCTIONS
+========================================
+
+STEP 1: Stop Strapi
+--------------------
+If Strapi is running, press Ctrl + C in the terminal to stop it.
+
+STEP 2: Run the Rebuild Script
+-------------------------------
+Double-click this file:
+   rebuild-strapi.bat
+
+OR run these commands manually:
+   cd strapi
+   npm run build
+   npm run develop
+
+STEP 3: Wait for Rebuild
+-------------------------
+The rebuild will:
+1. Clean old build files
+2. Rebuild Strapi (this takes 1-2 minutes)
+3. Start Strapi automatically
+
+You'll see messages like:
+   "Building your admin UI with development configuration..."
+   "Admin UI built successfully"
+   "Server started on http://localhost:1337"
+
+STEP 4: Verify Permissions Appear
+----------------------------------
+1. Open http://localhost:1337/admin
+2. Go to Settings → Roles → Public
+3. Scroll down to the Permissions section
+4. You should NOW see these sections:
+   ✓ PROJECT
+   ✓ SERVICE
+   ✓ INDUSTRY
+   ✓ ARTICLE
+
+STEP 5: Set Permissions
+-----------------------
+For each content type:
+   □ Expand "PROJECT" → Check ☑ find and ☑ findOne
+   □ Expand "SERVICE" → Check ☑ find and ☑ findOne
+   □ Expand "INDUSTRY" → Check ☑ find and ☑ findOne
+   □ Expand "ARTICLE" → Check ☑ find and ☑ findOne
+
+Click "Save" button at top right
+
+STEP 6: Test API Endpoints
+---------------------------
+Open a NEW terminal (keep Strapi running) and run:
+   node test-strapi-api.js
+
+Expected result:
+   ✅ All 4 endpoints return 200 OK
+   ✅ You see JSON responses (empty arrays if no content yet)
+
+========================================
+TROUBLESHOOTING
+========================================
+
+If rebuild fails:
+- Make sure you're in the correct directory
+- Check that Node.js is installed: node --version
+- Try deleting these folders manually:
+  strapi\.cache
+  strapi\build
+  strapi\.strapi\client
+
+If permissions still don't appear:
+- The content types might not be properly created
+- Check Content-Type Builder to verify they exist
+- If missing, you'll need to recreate them
+
+If you still get 404 errors:
+- Make sure Strapi is running on http://localhost:1337
+- Check the terminal for any error messages
+- Verify the API routes exist in strapi/src/api/
+
+========================================
+WHAT HAPPENS DURING REBUILD?
+========================================
+
+npm run build does:
+1. Compiles TypeScript/JavaScript
+2. Builds the admin panel UI
+3. Registers all API routes
+4. Creates the API documentation
+5. Sets up the database schema
+
+This is different from just restarting Strapi!
+A restart uses the old build files.
+A rebuild creates fresh build files with all routes registered.
+
+========================================
+NEXT STEPS AFTER SUCCESS
+========================================
+
+Once you get 200 OK responses:
+✅ Task 3.1 Complete - Permissions configured
+✅ Task 3.2 Complete - API endpoints tested
+✅ Ready to move to Task 4 - Add sample content
+
+========================================

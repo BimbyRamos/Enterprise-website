@@ -7,13 +7,16 @@ import FeaturedServices from '@/components/FeaturedServices';
 import Projects from '@/components/Projects';
 import Industries from '@/components/Industries';
 import Newsletter from '@/components/Newsletter';
+import InsightsFeed from '@/components/InsightsFeed';
 import ErrorBoundary from '@/components/ErrorBoundary';
-import { fetchServices } from '@/lib/api';
-import type { Service } from '@/lib/api';
+import { fetchServices, fetchLatestArticles } from '@/lib/api';
+import type { Service, Article } from '@/lib/api';
 
 export default function Home() {
   const [services, setServices] = useState<Service[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
   const [isLoadingServices, setIsLoadingServices] = useState(true);
+  const [isLoadingArticles, setIsLoadingArticles] = useState(true);
 
   useEffect(() => {
     // Fetch services
@@ -26,18 +29,24 @@ export default function Home() {
         console.error('Error fetching services:', error);
         setIsLoadingServices(false);
       });
+
+    // Fetch articles
+    fetchLatestArticles(3)
+      .then((data) => {
+        setArticles(data);
+        setIsLoadingArticles(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching articles:', error);
+        setIsLoadingArticles(false);
+      });
   }, []);
 
   return (
     <>
       {/* Hero Section */}
       <ErrorBoundary>
-        <Hero
-          headline="Empowering Innovation Through ICT Solutions"
-          subtext="Networld Capital Ventures, Inc. - The ICT arm of the PJ Lhuillier Group, delivering comprehensive technology solutions"
-          ctaText="Explore Solutions"
-          ctaLink="/contact"
-        />
+        <Hero />
       </ErrorBoundary>
 
       {/* About Us Section */}
@@ -58,6 +67,11 @@ export default function Home() {
       {/* Industries Section */}
       <ErrorBoundary>
         <Industries />
+      </ErrorBoundary>
+
+      {/* Insights Section */}
+      <ErrorBoundary>
+        <InsightsFeed articles={articles} isLoading={isLoadingArticles} />
       </ErrorBoundary>
 
       {/* Newsletter Section */}

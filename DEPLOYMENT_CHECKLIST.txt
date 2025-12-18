@@ -1,0 +1,77 @@
+═══════════════════════════════════════════════════════════════
+  VERCEL DEPLOYMENT CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+BEFORE DEPLOYING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[ ] Test website locally (npm run dev)
+[ ] Check all pages work
+[ ] No console errors
+[ ] All features working
+
+DEPLOY TO VERCEL:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Option 1: Use the script (EASIEST)
+  [ ] Run: deploy-to-vercel.bat
+  [ ] Wait for completion
+  [ ] Done!
+
+Option 2: Manual commands
+  [ ] git add .
+  [ ] git commit -m "Deploy updates"
+  [ ] git push origin main
+  [ ] Wait for Vercel auto-deploy
+
+ENVIRONMENT VARIABLES (IMPORTANT!):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Go to: Vercel Dashboard → Your Project → Settings → Environment Variables
+
+Required:
+  [ ] NEXT_PUBLIC_CMS_URL = https://your-strapi-url.com
+  [ ] NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = your_api_key
+
+Optional (for email):
+  [ ] NEXT_PUBLIC_EMAILJS_SERVICE_ID
+  [ ] NEXT_PUBLIC_EMAILJS_TEMPLATE_ID  
+  [ ] NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+AFTER DEPLOYMENT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Test these on your live site:
+
+  [ ] Homepage loads
+  [ ] "Get Started" button works (goes to /contact)
+  [ ] Contact page displays
+  [ ] Industries pages work
+  [ ] Services pages work
+  [ ] Projects page works
+  [ ] Navigation works
+  [ ] Footer links work
+  [ ] No console errors
+
+TROUBLESHOOTING:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Build fails?
+  → Check build logs in Vercel dashboard
+  → Test locally: npm run build
+  → Check for TypeScript errors
+
+Site doesn't work?
+  → Check environment variables are set
+  → Check CMS URL is correct (not localhost!)
+  → Check Google Maps API key restrictions
+
+Maps don't show?
+  → Add Google Maps API key to Vercel
+  → Check API key allows your Vercel domain
+  → See: GOOGLE_MAPS_SETUP_GUIDE.md
+
+═══════════════════════════════════════════════════════════════
+
+QUICK DEPLOY:
+  1. Run: deploy-to-vercel.bat
+  2. Go to: https://vercel.com/dashboard
+  3. Watch deployment complete
+  4. Test your live site!
+
+═══════════════════════════════════════════════════════════════

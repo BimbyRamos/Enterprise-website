@@ -470,6 +470,61 @@ We do architecture stuff.
 
 ## 🛠️ Troubleshooting
 
+### ⚠️ ERROR: Can't Save Content Type
+
+If you get an error when clicking "Save" after creating a content type:
+
+**Common Causes & Solutions:**
+
+1. **Field Name Conflicts**
+   - Don't use reserved words: `id`, `createdAt`, `updatedAt`, `publishedAt`
+   - Use camelCase: `featuredImage` not `featured_image`
+   - Avoid special characters in field names
+
+2. **Enumeration Field Issues**
+   - Strapi has strict rules for enum values
+   - ❌ BAD: `"In Progress"`, `"Network & Security"`, `"Web Development 2.0"`
+   - ✅ GOOD: `"InProgress"`, `"NetworkSecurity"`, `"WebDevelopment"`
+   - **Solution**: Use single words or camelCase without spaces/special characters
+   - **Alternative**: Use Text field instead of Enumeration for complex values
+
+3. **Database Connection Issues**
+   - Check if Strapi is still running
+   - Look for errors in the terminal where Strapi is running
+   - Restart Strapi: Press Ctrl+C, then run `npm run develop` again
+
+4. **Too Many Fields at Once**
+   - Add fields one at a time
+   - Click "Save" after each field
+   - Wait for Strapi to restart between saves
+
+5. **Browser Cache Issues**
+   - Clear browser cache (Ctrl + Shift + Delete)
+   - Try in incognito/private mode
+   - Try a different browser
+
+**Step-by-Step Fix:**
+
+1. **Check Terminal for Errors**
+   - Look at the terminal where Strapi is running
+   - Error messages will show the exact problem
+   - Common errors: "Duplicate field name", "Invalid enum value"
+
+2. **Start Fresh**
+   - Delete the problematic content type
+   - Create it again with simpler field names
+   - Add fields one at a time
+
+3. **Use Simple Field Types First**
+   - Start with Text and Number fields
+   - Test if it saves
+   - Then add complex fields (JSON, Relations, etc.)
+
+4. **For Category/Status Fields**
+   - Instead of Enumeration with spaces: `"In Progress"`
+   - Use Text field with default value: `"InProgress"`
+   - Or use simple enum values: `"Completed"`, `"InProgress"`, `"Planned"`
+
 ### Can't see content on website?
 
 1. Check if content is **Published** (not just Saved)
@@ -490,6 +545,13 @@ We do architecture stuff.
 2. Check if you clicked "Publish"
 3. Restart Strapi if needed
 4. Check browser console for errors
+
+### Strapi Won't Start?
+
+1. Check if port 1337 is already in use
+2. Delete `.tmp` folder in strapi directory
+3. Run `npm install` in strapi folder
+4. Check Node.js version (needs 16.x or 18.x)
 
 ---
 

@@ -1,0 +1,96 @@
+========================================
+FIX: "Status" Field Name Error
+========================================
+
+ERROR MESSAGE:
+"This name cannot be used in your content type as it might break other functionalities"
+
+PROBLEM:
+"status" is a RESERVED WORD in Strapi and cannot be used as a field name.
+
+SOLUTION:
+Use "projectStatus" instead of "status"
+
+========================================
+UPDATED PROJECT CONTENT TYPE FIELDS
+========================================
+
+When creating the Project content type, use these field names:
+
+□ Field 1: Text (Short text)
+   Name: title
+   ☑ Required field
+
+□ Field 2: Text (Long text)
+   Name: description
+   ☑ Required field
+
+□ Field 3: Text (Short text)
+   Name: category
+   ☑ Required field
+   Default value: Network Infrastructure
+
+□ Field 4: Enumeration
+   Name: projectStatus    ← CHANGED FROM "status"
+   Values (one per line):
+      Completed
+      InProgress
+      Planned
+   ☑ Required field
+
+□ Field 5: Text (Short text)
+   Name: client
+
+□ Field 6: Text (Short text)
+   Name: duration
+
+□ Field 7: Text (Short text)
+   Name: team
+
+□ Field 8: Text (Long text)
+   Name: challenge
+
+□ Field 9: Text (Long text)
+   Name: solution
+
+□ Field 10: Text (Long text)
+   Name: outcome
+
+□ Field 11: JSON
+   Name: technologies
+
+□ Field 12: JSON
+   Name: metrics
+
+□ Field 13: Media (Single media)
+   Name: image
+   Type: Single media
+   Allowed types: ☑ Images only
+
+========================================
+OTHER RESERVED WORDS TO AVOID
+========================================
+
+Don't use these as field names in Strapi:
+- status
+- id
+- createdAt
+- updatedAt
+- publishedAt
+- createdBy
+- updatedBy
+- locale
+- localizations
+
+========================================
+CONTINUE WITH THE GUIDE
+========================================
+
+Now continue with the other content types:
+- Service (8 fields) - no reserved words
+- Industry (8 fields) - no reserved words
+- Article (8 fields) - no reserved words
+
+Follow RECREATE_CONTENT_TYPES.txt for the rest!
+
+========================================

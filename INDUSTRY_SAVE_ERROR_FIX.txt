@@ -1,0 +1,155 @@
+========================================
+FIX: Industry Content Type Save Error
+========================================
+
+PROBLEM:
+"An error occurred" when trying to save Industry content type
+
+========================================
+COMMON CAUSES & SOLUTIONS
+========================================
+
+1. DUPLICATE FIELD NAME
+   ❌ Problem: You might have used "slug" twice
+   ✅ Solution: Make sure each field name is unique
+   
+   Check that you only have ONE "slug" field
+
+2. RESERVED WORD USED
+   ❌ Problem: Field name conflicts with Strapi
+   ✅ Solution: Check these field names:
+      - title ✓ (OK)
+      - slug ✓ (OK)
+      - description ✓ (OK)
+      - icon ✓ (OK)
+      - gradient ✓ (OK)
+      - keyPoints ✓ (OK)
+      - stats ✓ (OK)
+      - featuredImage ✓ (OK)
+   
+   All Industry fields should be fine!
+
+3. STRAPI IS BUSY
+   ❌ Problem: Strapi is still processing previous save
+   ✅ Solution: Wait 30 seconds and try again
+
+4. DATABASE CONNECTION ISSUE
+   ❌ Problem: Strapi lost connection to database
+   ✅ Solution: Restart Strapi
+      - Stop Strapi (Ctrl + C)
+      - cd strapi
+      - npm run develop
+
+5. MISSING REQUIRED CONFIGURATION
+   ❌ Problem: UID field not properly configured
+   ✅ Solution: For the "slug" field, make sure:
+      - Type: UID
+      - Attached field: title ← IMPORTANT!
+      - Required: ☑ Checked
+
+========================================
+STEP-BY-STEP FIX
+========================================
+
+OPTION 1: Check Your Fields
+----------------------------
+1. Look at the Industry content type you're creating
+2. Verify you have exactly 8 fields:
+   □ title (Text Short, Required)
+   □ slug (UID, Attached to: title, Required)
+   □ description (Text Long, Required)
+   □ icon (Text Short)
+   □ gradient (Text Short)
+   □ keyPoints (JSON)
+   □ stats (JSON)
+   □ featuredImage (Media Single)
+
+3. Make sure NO field names are duplicated
+4. Try clicking "Save" again
+
+
+OPTION 2: Check Strapi Terminal
+--------------------------------
+1. Look at the terminal where Strapi is running
+2. Look for error messages (usually in red)
+3. Common errors:
+   - "Duplicate field name" → Remove duplicate
+   - "Invalid field configuration" → Check UID field
+   - "Database error" → Restart Strapi
+
+
+OPTION 3: Start Over with Industry
+-----------------------------------
+1. Click "Cancel" or close the Industry content type
+2. Go back to Content-Type Builder
+3. Delete the Industry content type if it was partially created
+4. Create Industry again from scratch
+5. Add fields one by one carefully
+
+
+OPTION 4: Restart Strapi
+-------------------------
+1. Stop Strapi (Ctrl + C in terminal)
+2. Wait 5 seconds
+3. Start again:
+   cd strapi
+   npm run develop
+4. Wait for Strapi to fully start
+5. Try creating Industry content type again
+
+========================================
+MOST LIKELY CAUSE
+========================================
+
+The "slug" field might not be properly configured!
+
+When creating the slug field:
+1. Select "UID" type
+2. Name: slug
+3. **Attached field: title** ← Don't forget this!
+4. Required: ☑ Check this
+5. Click "Finish"
+
+If you forgot to set "Attached field: title", 
+Strapi will show an error when saving.
+
+========================================
+QUICK FIX
+========================================
+
+1. Cancel the current Industry creation
+2. Start over
+3. When you get to the "slug" field:
+   - Type: UID
+   - Name: slug
+   - Attached field: title ← CRITICAL!
+   - Required: ☑
+4. Continue with other fields
+5. Click "Save"
+
+========================================
+IF STILL HAVING ISSUES
+========================================
+
+Check the Strapi terminal output and look for:
+- Red error messages
+- Stack traces
+- Database errors
+- Port conflicts
+
+Then try:
+1. Restart Strapi completely
+2. Check that Project and Service were saved successfully
+3. Try creating Industry again
+
+========================================
+ALTERNATIVE: SKIP INDUSTRY FOR NOW
+========================================
+
+If Industry keeps failing:
+1. Skip it temporarily
+2. Create Article content type first
+3. Come back to Industry later
+4. Sometimes Strapi needs a restart between content types
+
+========================================
